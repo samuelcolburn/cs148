@@ -1,0 +1,1 @@
+SELECT fldFirstName, fldLastName, pmkNetId FROM tblTeachers WHERE pmkNetId like "r%o"

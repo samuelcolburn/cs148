@@ -1,0 +1,23 @@
+Track ID,int(200)
+Track Name,varchar(20)
+Track Info,varchar(2000)
+Audio File,varchar(20)
+Track Image,varchar(20)
+Track Follow,bool
+Track Post Date,varchar(20)
+Track Play Count,int(20)
+Track Private Check,bool
+Track Likes,bool
+Playlist ID,int(20)
+Playlist Likes,bool
+Track List,varchar
+Playlist Image,varchar(20)
+Username,varchar(20)
+Email,varchar(20)
+Follows,bool
+Password,varchar(20)
+Link Name,varchar(20)
+Link URL,varchar(20)
+City,varchar(20)
+Country,varchar(20)
+User Image File,varchar(20)

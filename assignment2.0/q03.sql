@@ -1,0 +1,1 @@
+SELECT * FROM tblSections WHERE fldBuilding = "Kalkin" AND fldStart = "15:00:00"

@@ -1,0 +1,1 @@
+SELECT * FROM tblCourses WHERE fldDepartment like '%CS%' AND fldCourseNumber = 148
