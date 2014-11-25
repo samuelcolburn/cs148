@@ -1,0 +1,21 @@
+
+            table{
+                border: medium #000080 solid;
+                border-collapse: collapse;
+                width: 90%;
+                margin: auto;
+                max-width: 600px;
+            }
+
+            td, th {
+                border: thin #000080 solid;
+                border-collapse: collapse;
+            }
+
+            tr:nth-child(even) {
+                background-color: #FFF;
+            }
+
+            tr:nth-child(odd){
+                background-color: whitesmoke;
+            }

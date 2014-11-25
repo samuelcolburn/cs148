@@ -1,0 +1,1 @@
+SELECT fldCourseName FROM tblCourses WHERE (fldCourseName like "%data%") AND fldDepartment != "CS"

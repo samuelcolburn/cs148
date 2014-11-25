@@ -1,0 +1,381 @@
+
+
+/*
+to understand the comments like 900px / 960px
+   read http://alistapart.com/article/responsive-web-design/
+
+*/
+/*****************     main layout section             ************************/
+
+/* ===================  General Section  ==================================== */
+
+* {
+    font-size: 100%;  /* sets the font size for all elements. */
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #233d4b;
+    margin: auto;
+    width: 98%;
+    background-repeat:repeat-x;
+
+}
+
+/* h1 in header section */
+
+h2 {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 1em;
+    display: block;
+    text-align: left;
+    margin-left:9em;
+}
+
+h3 {
+    color: #FFF68F;
+    font-weight: bold;
+    font-size: 1.5em;
+    border-bottom-style:double;
+}
+
+h4 {
+    color: #FFFFEE;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-decoration:underline;
+    margin-bottom:0.25em;
+    text-indent:2em;
+}
+
+h5 { 
+    color: #000000;
+    font-family: "sansserif";
+    font-weight: bold;
+    font-size: .6em;	
+}
+
+h6 {
+    color: #000000;
+    font-family: "sansserif";
+    font-weight: bold;
+    font-size: .5em;	
+}
+
+ol ol ol li {
+    list-style: lower-alpha
+}
+
+ol ol li {
+    font-weight: normal;
+    list-style: decimal;
+    padding-top: 0em
+}
+
+ol li {
+    font-weight: bold;
+    list-style: upper-roman;
+    padding-top: 1em
+}
+
+ul ul ul li { 
+    list-style: circle;
+}
+
+ul ul li { 
+    list-style: square;
+}
+
+ul li { 
+    list-style: disc;
+    padding-bottom:0.4em;
+    margin-left:1em;
+}
+
+
+a:link{
+    color:#9887b7;
+    text-decoration: none;
+
+}
+a:visited{
+    color:#9887b7;
+    text-decoration: none;
+}    
+
+
+a:hover{
+    color:#b79887; 
+    text-decoration: none;
+
+}
+
+
+/*****************     header section             *****************************/
+
+header {
+    box-shadow : 0 1px 1px rgba(0, 0, 0, 0);
+    width:100%;
+    margin-bottom:3em;
+
+}
+
+h1 {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 3em;
+    padding-left:3em;
+    min-width:20em;
+}
+
+
+
+/* ===================  Navigation Section  ================================= */
+nav {
+    padding: 0em;
+    padding-left:9em;
+
+    min-width:900px;
+    /* border-top: solid 0.2em #FFF;  
+     border-bottom: solid 0.2em #FFF; */
+    background-color:#233d4b;
+    margin-bottom:2em;
+
+}
+
+nav ol{
+    font-size:0px;
+    padding-left:0em;
+
+}
+
+nav ol li{
+    display:inline-block;
+    padding-top:0.5em;
+    padding-right:1em;
+    padding-bottom:0.5em;
+    list-style-type: none;
+    font-size:16px;
+}
+
+li.activePage{
+    color:#FFF;
+}
+
+li.inactivePage{
+
+}
+
+li.inactivePage:hover{
+
+}
+
+nav a:link{
+    color:#FFF;
+    text-decoration: none;
+}
+
+nav a:visited{
+    color:#FFF;
+    text-decoration: none;
+}
+
+nav a:hover{ 
+    text-decoration: none;
+    border-bottom:thick #FFF solid;
+}
+
+
+/* ===================  Footer Section  ==================================== */
+
+footer {
+    font-size: x-small;
+    text-align: center;
+    margin-top:1em;
+    color:#FFF;
+}
+
+footer a:link{
+    color:#5E806A;
+    text-decoration: none;
+    font-size: x-small;
+
+}
+
+footer a:visited{
+    color:#5E806A;
+    text-decoration: none;
+    font-size: x-small;
+}    
+
+footer a:hover{
+    color:#87B798; 
+    text-decoration: none;
+    font-size: x-small;
+
+}
+
+
+/*****************     article section             ****************************/
+/* un comment and see what happens */
+/*
+article{
+    height: 200px;
+    overflow: auto;
+}
+*/
+
+article h1, article p, article table{
+    padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+}
+
+
+/*****************     aside section              *****************************/
+aside {
+    margin: 0 auto;
+    width: 69.7885196%; /* 231px / 331px */
+}
+aside h2, aside p{
+    padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+}
+
+
+/*****************     footer section              ****************************/
+footer{
+    clear: both;
+    padding: 0.8em 5.33333333%;  /* 48px / 900px */
+}
+
+/*****************     form section                ****************************/
+#form article#main{
+    float: none;
+    margin: auto; /* because of the fixed width this centers the form */
+    text-align: left;
+    width: 600px; /* not repsonive but fixed */
+}
+
+/* need to clear any floats that may exist */
+fieldset{
+    display:block;
+    clear: both;
+    padding: 1em;
+    margin:auto;
+    text-align:center;
+
+}
+/* just pushes content to left side of the box. */
+fieldset.contact{
+    float: left;
+    border:none;
+    margin-left:2em;
+}
+/* when you look at the labels this pushes then next to the input and right
+aligns them. Display block means they are each on their own line. */
+fieldset.contact label{
+    display: block;
+    text-align: right;
+    /* pushes the text to the right where they line up */
+    /* the float left above pushes everything back to the left*/
+}
+
+fieldset.contact input{
+    width: 20em;
+/* works with above to be the same size for the boxes */
+}
+
+
+fieldset.contact select{
+    width: 18em;
+    margin-left:3em;/* works with above to be the same size for the boxes */
+}
+
+
+fieldset.buttons{
+    border: none;
+}
+
+fieldset.wrapper {
+    border:none;
+}
+
+fieldset.wrapper legend {
+    color: #FFF;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+fieldset.wrapper > legend {
+    /* i only want the first legend ie if it follows the class wrapper */
+    font-size: 2em;
+}
+
+label {
+    color: #FFF;
+    display: block;
+    font-size: .9em;
+    font-weight: bold;
+}
+
+
+#lstBuilding{
+    display:inline;
+    
+}
+/* style the errors in the form so they are visible */
+.mistake {
+    color: #fff;
+    background-color:rgba(255, 85, 85, 0.5);
+    border: thin solid #000;
+}
+
+/* style the list of errors that will show before the form */
+#errors ol li{
+    color: #ff5555;
+}
+
+
+/* FORM RESULTS TABLE SETTINGS */
+
+table{
+
+    border-collapse: collapse;
+    width: 90%;
+    margin: auto;
+    margin-left:9em;
+    max-width: 1000px;
+    color: #FFF;
+
+}
+th {
+    border-bottom: thick #a8a8a8 solid;
+    font-weight: bold;
+    padding: 0.2em;
+    padding-bottom:0.3em;
+    background-color:#713e3e;
+
+
+}
+td {
+    border-collapse: collapse;
+    padding:.2em;
+    text-align: center;
+
+}
+
+
+tr:nth-child(even) {
+    background-color: #233d4b;
+
+}
+
+tr:nth-child(odd){
+    background-color: #4e636e;
+
+}
+
+tr:hover{
+    background-color:#448fc2;
+
+}

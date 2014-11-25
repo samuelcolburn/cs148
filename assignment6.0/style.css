@@ -1,0 +1,416 @@
+
+
+/*
+to understand the comments like 900px / 960px
+   read http://alistapart.com/article/responsive-web-design/
+
+*/
+/*****************     main layout section             ************************/
+
+/* ===================  General Section  ==================================== */
+
+* {
+    font-size: 100%;  /* sets the font size for all elements. */
+    font-family:Arial, Helvetica, sans-serif;
+    color: #FF9C5F;
+}
+
+body {
+    background-color: #253939;
+    margin: auto;
+    width: 98%;
+    background-repeat:repeat-x;
+
+}
+
+/* h1 in header section */
+
+h2 {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+}
+
+h3 {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom:0.2em;
+}
+
+h4 {
+    color: #FFFFEE;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-decoration:underline;
+    margin-bottom:0.25em;
+    text-indent:2em;
+}
+
+h5 { 
+    color: #000000;
+    font-family: "sansserif";
+    font-weight: bold;
+    font-size: .6em;	
+}
+
+h6 {
+    color: #000000;
+    font-family: "sansserif";
+    font-weight: bold;
+    font-size: .5em;	
+}
+
+ol ol ol li {
+    list-style: lower-alpha
+}
+
+ol ol li {
+    font-weight: normal;
+    list-style: decimal;
+    padding-top: 0em
+}
+
+ol li {
+    font-weight: bold;
+    list-style: upper-roman;
+    padding-top: 1em
+}
+
+ul ul ul li { 
+    list-style: circle;
+}
+
+ul ul li { 
+    list-style: square;
+}
+
+ul li { 
+    list-style: disc;
+    padding-bottom:0.4em;
+    margin-left:1em;
+}
+
+
+a:link{
+    color:#FFF;
+    text-decoration: underline;
+
+}
+a:visited{
+    color:#FFF;
+    text-decoration: none;
+}    
+
+
+a:hover{
+    text-decoration: underline;
+    font-weight: bold;
+
+}
+
+
+/*****************     header section             *****************************/
+
+header {
+    box-shadow : 0 1px 1px rgba(0, 0, 0, 0);
+    width:100%;
+    margin-bottom:3em;
+
+}
+
+h1 {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 3em;
+    padding-left:3em;
+    min-width:20em;
+}
+
+
+
+/* ===================  Navigation Section  ================================= */
+nav {
+    padding: 0em;
+    padding-left:9em;
+    color:#FFF;
+    min-width:900px;
+    // border-top: solid 0.2em #FFF;  
+    // border-bottom: solid 0.2em #FFF; 
+    // background-color:#233d4b;
+    margin-bottom:2em;
+
+}
+
+nav ol{
+    font-size:0px;
+    padding-left:0em;
+
+}
+
+nav ol li{
+    display:inline-block;
+    padding-top:0.5em;
+    padding-right:1em;
+    padding-bottom:0.5em;
+    list-style-type: none;
+    font-size:16px;
+}
+
+li.activePage{
+    // color:#FFF;
+}
+
+li.inactivePage{
+
+}
+
+li.inactivePage:hover{
+
+}
+
+nav a:link{
+    color:#FFF;
+    text-decoration: none;
+}
+
+nav a:visited{
+    color:#FFF;
+    text-decoration: none;
+}
+
+nav a:hover{ 
+    text-decoration: none;
+    border-bottom: medium #558C89 solid;
+}
+
+
+/* ===================  Footer Section  ==================================== */
+
+
+footer {
+    font-size: x-small;
+    text-align: center;
+    margin-top:1em;
+    color:#FFF;
+    clear: both;
+    padding: 0.8em 5.33333333%;  /* 48px / 900px */
+}
+
+footer a:link{
+    color:#FFF;
+    text-decoration: none;
+    font-size: x-small;
+
+}
+
+footer a:visited{
+    color:#FFF;
+    text-decoration: none;
+    font-size: x-small;
+}    
+
+footer a:hover{
+    color:#FFF; 
+    text-decoration: none;
+    font-size: x-small;
+
+}
+.footer {
+    color:#FFF;
+}
+
+/*****************     article section             ****************************/
+/* un comment and see what happens */
+/*
+article{
+    height: 200px;
+    overflow: auto;
+}
+*/
+#main {
+    margin-left:9em;
+
+}
+article h1 {
+    padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+    margin-left:3em;
+}
+
+
+/*****************     aside section              *****************************/
+aside {
+    margin: 0 auto;
+    width: 69.7885196%; /* 231px / 331px */
+}
+aside h2, aside p{
+    padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+}
+
+
+
+/*****************     form section                ****************************/
+#form article#main{
+    float: none;
+    margin: auto; /* because of the fixed width this centers the form */
+    text-align: left;
+    width: 600px; /* not repsonive but fixed */
+}
+
+/* need to clear any floats that may exist */
+fieldset{
+    display:block;
+    clear: both;
+    padding: 1em;
+    margin:auto;
+    text-align:center;
+    width:30em;
+
+}
+/* just pushes content to left side of the box. */
+fieldset.contact{
+    float: left;
+    border:none;
+    margin-left:2em;
+}
+/* when you look at the labels this pushes then next to the input and right
+aligns them. Display block means they are each on their own line. */
+fieldset.contact label{
+    display: block;
+    text-align: right;
+    /* pushes the text to the right where they line up */
+    /* the float left above pushes everything back to the left*/
+}
+
+fieldset.contact input{
+    width: 20em;
+    /* works with above to be the same size for the boxes */
+}
+
+
+fieldset.contact select{
+    width: 18em;
+    margin-left:3em;/* works with above to be the same size for the boxes */
+}
+
+
+fieldset.buttons{
+    border: none;
+}
+
+fieldset.wrapper {
+    border:none;
+}
+fieldset.wrapperTwo {
+    border:0.2em solid #FFF;
+}
+fieldset.wrapper legend {
+    //   color: #FFF;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+fieldset.wrapper > legend {
+    /* i only want the first legend ie if it follows the class wrapper */
+    font-size: 2em;
+}
+
+label {
+    //   color: #FFF;
+    display: block;
+    font-size: .9em;
+    font-weight: bold;
+    padding:1em;
+}
+
+
+
+input {
+    color:#FFF;
+    background-color:#253939;
+    border:0.2em solid #FFF;
+    padding:0.2em;
+
+}
+/* style the errors in the form so they are visible */
+.mistake {
+    //  color: #fff;
+    background-color:rgba(255, 85, 85, 0.5);
+    border: 0.2em solid #FFF;
+}
+
+/* style the list of errors that will show before the form */
+#errors ol li{
+    color: #ff5555;
+    text-align:center;
+    list-style: none;
+}
+
+#btnSubmit{
+    background-image:none;
+    background-color:#233d4b;
+    cursor: pointer; 
+    cursor: hand; 
+
+}
+
+
+/* MAIL MESSAGE RESPONSE FORMATTING */
+div.message{
+    border:thin solid #a8a8a8;
+    background-color:#FFF;
+    color:#000;
+    margin-left:9em;
+    margin-right: 9em;
+}
+
+
+/* MEMBER LIST TABLE SETTINGS */
+
+#memberlist h2 {
+    text-align:left;
+    font-size:1.5em;
+}
+
+table{
+
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 1000px;
+    color: #d1d1d1;
+
+}
+th {
+    //border-bottom: thick #f5f5f5 solid;
+    font-weight: bold;
+    padding: 0.2em;
+    padding-bottom:0.3em;
+    color:#FFF;
+    background-color:#25242C;
+
+
+}
+td {
+    border-collapse: collapse;
+    padding:.2em;
+    text-align: center;
+
+}
+
+
+tr:nth-child(even) {
+    background-color: #253939;
+
+}
+
+tr:nth-child(odd){
+    background-color: #25242C;
+
+}
+
+tr:hover{
+    background-color:#558C89;
+
+}

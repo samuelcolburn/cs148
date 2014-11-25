@@ -1,0 +1,1 @@
+SELECT fldDepartment FROM tblCourses wHERE fldCourseName = "Elementary"
