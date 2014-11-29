@@ -23,7 +23,7 @@ if ($debug)
 $yourURL = $domain . $phpSelf;
 
     
-$query = "SELECT fldUsername as 'Username' , fldPassword as 'Password' , fldEmail as 'Email' , pmkRegisterId as 'Registration ID', fldDateJoined as 'Date Joined' FROM tblRegister WHERE fldApproved = 1";
+$query = "SELECT fldUsername as 'Username' , fldPassword as 'Password' , fldEmail as 'Email' , pmkUserId as 'User ID', fldDateJoined as 'Date Joined' FROM tblUsers WHERE fldPermissionLevel = 2";
 $data = array();
 $results = $thisDatabase->select($query, $data);
 

@@ -53,7 +53,7 @@ if (isset($_GET["q"])) {
     //##############################################################
     // get the membership record 
 
-    $query = "SELECT fldUsername , fldDateJoined, fldEmail, pmkUserId FROM tblUsers WHERE UserId = ? ";
+    $query = "SELECT fldUsername , fldDateJoined, fldEmail, pmkUserId FROM tblUsers WHERE pmkUserId = ? ";
 
     $results = $thisDatabase->select($query, $data);
 
@@ -190,6 +190,7 @@ if (isset($_GET["q"])) {
 } // ends isset get q
 ?>
 
+</article>
 
 
 <?php
@@ -197,6 +198,5 @@ include "footer.php";
 if ($debug)
     print "<p>END OF PROCESSING</p>";
 ?>
-</article>
 </body>
 </html>

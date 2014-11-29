@@ -12,7 +12,7 @@
  * Last updated on: October 22, 2014
  * 
  * 
-*/
+ */
 
 include "top.php";
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -43,9 +43,19 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
+//@@ USER DATA @@
 $email = "samuel.colburn@uvm.edu";
 $Username = '';
 $password = '';
+
+// @@ PROFILE DATA @@
+$firstName = "";
+
+$lastName = "";
+
+$gender = "";
+
+$age = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -57,9 +67,14 @@ $emailERROR = false;
 $UsernameERROR = false;
 $passwordERROR = false;
 
+//PROFILE ERROR FLAGS
+$firstNameERROR = false;
+$lastNameERROR = false;
+$genderERROR = false;
+$ageERROR = false;
+
 
 //ERROR CONSTANTS
-
 //Username
 $MIN_USERNAME_LENGTH = 6;
 $MAX_USERNAME_LENGTH = 15;
@@ -105,7 +120,17 @@ if (isset($_POST["btnSubmit"])) {
 
     $Username = htmlentities($_POST["txtUsername"], ENT_QUOTES, "UTF-8");
 
-    $password  =  htmlentities($_POST["Password"], ENT_QUOTES, "UTF-8");
+    $password = htmlentities($_POST["Password"], ENT_QUOTES, "UTF-8");
+
+    //--- PROFILE SANATIZE ---
+
+    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
+
+    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
+    
+    $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
+      
+    $age = htmlentities($_POST["lstAge"], ENT_QUOTES, "UTF-8");
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -117,7 +142,6 @@ if (isset($_POST["btnSubmit"])) {
 // order that the elements appear on your form so that the error messages
 // will be in the order they appear. errorMsg will be displayed on the form
 // see section 3b. The error flag ($emailERROR) will be used in section 3c.
-
     //~~~~~~~~~~~EMAIL VALIDATION~~~~~~~~~~
     if ($email == "") {
         $errorMsg[] = "Please enter your email address";
@@ -127,7 +151,7 @@ if (isset($_POST["btnSubmit"])) {
         $emailERROR = true;
     }
 
-    
+
     //~~~~~~~~~~~~~USERNAME VALIDATION~~~~~~~~~~~
     $usernamecheck = "SELECT fldUsername FROM tblUsers WHERE fldUsername = ? ";
     $data = array($Username);
@@ -135,46 +159,36 @@ if (isset($_POST["btnSubmit"])) {
 
     if ($Username == "") {
         $errorMsg[] = "Please enter a username";
-        $UsernameERROR = true;              
-    } 
-    
-    elseif (strlen($Username)<$MIN_USERNAME_LENGTH){
+        $UsernameERROR = true;
+    } elseif (strlen($Username) < $MIN_USERNAME_LENGTH) {
         $errorMsg[] = "Username must be longer than 6 characters";
         $UsernameERROR = true;
-    }
-    elseif (strlen($Username)>$MAX_USERNAME_LENGTH){
+    } elseif (strlen($Username) > $MAX_USERNAME_LENGTH) {
         $errorMsg[] = "Username can be no longer than 15 characters";
         $UsernameERROR = true;
-    }
-    elseif (!verifyAlphaNum2($Username)) {
+    } elseif (!verifyAlphaNum2($Username)) {
         $errorMsg[] = "Invalid Username";
         $UsernameERROR = true;
-    }
-    
-    elseif (!empty($username_check_results)) {
+    } elseif (!empty($username_check_results)) {
         $errorMsg[] = 'That username is already in use. Please choose a different username.';
         $UsernameERROR = true;
     }
 
     //~~~~~~PASSWORD VALIDATION~~~~~~~~~~~
-    if ($password == ''){
+    if ($password == '') {
         $errorMsg[] = "Please enter a password";
         $passwordERROR = true;
-        
-    }
-    elseif (strlen($password)<$MIN_PASSWORD_LENGTH){
+    } elseif (strlen($password) < $MIN_PASSWORD_LENGTH) {
         $errorMsg[] = "Password must be longer than 6 characters";
         $passwordERROR = true;
-    }
-    elseif (strlen($password)>$MAX_PASSWORD_LENGTH){
+    } elseif (strlen($password) > $MAX_PASSWORD_LENGTH) {
         $errorMsg[] = "Password can be no longer than 15 characters";
         $passwordERROR = true;
-    }
-    elseif (!verifyAlphaNum2($password)){
+    } elseif (!verifyAlphaNum2($password)) {
         $errorMsg[] = "Invalid Password";
         $passwordERROR = true;
     }
-  
+
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2d Process Form - Passed Validation
@@ -195,7 +209,7 @@ if (isset($_POST["btnSubmit"])) {
         try {
             $thisDatabase->db->beginTransaction();
             $query = "INSERT INTO tblUsers SET fldEmail = ? , fldUsername = ? , fldPassword = ? ";
-            $data = array($email, $Username , $password);
+            $data = array($email, $Username, $password);
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -255,7 +269,7 @@ if (isset($_POST["btnSubmit"])) {
             $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
             $messageB .= "<p><b>Username:</b>   " . $Username . "</p>";
             $messageB .= "<p><b>Password:</b>   " . $password . "</p>";
-            
+
             $messageC .= "<p><b>Email Address:</b>  " . $email . "</p>";
 
 
@@ -337,7 +351,9 @@ if (isset($_POST["btnSubmit"])) {
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
+
                 <legend>Register Today</legend>
+                <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
                     <legend>Please complete the following form</legend>
                     <fieldset class="contact">
@@ -345,22 +361,22 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtUsername" class="required">Username
                             <input type="text" id="txtUsername" name="txtUsername"
                                    value="<?php print $Username; ?>"
-                                   tabindex="220" maxlength="16" placeholder="Enter a username"
+                                   tabindex="100" maxlength="16" placeholder="Enter a username"
                                    <?php if ($UsernameERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
-                        
+
                         <label for="Password" class="required">Password
                             <input type="password" id="Password" name="Password"
                                    value=""
-                                   tabindex="220" maxlength="16" placeholder="Enter a password"
+                                   tabindex="110" maxlength="16" placeholder="Enter a password"
                                    <?php if ($passwordERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
-                                                
-                        
+
+
                         <label for="txtEmail" class="required">Email
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
@@ -370,8 +386,86 @@ if (isset($_POST["btnSubmit"])) {
                                    >
                         </label>
 
-                    </fieldset> <!-- ends contact -->
-                </fieldset> <!-- ends wrapper Two -->
+                    </fieldset>
+                    <!-- ends User Form -->
+                </fieldset> 
+
+                <!-- ends wrapper Two -->
+
+                <!-- Profile Form -->
+                <fieldset class ="Profile">
+                    <legend>Optional Profile</legend>
+
+                    <label for="txtfirstName" class="required">First Name
+                        <input type="text" id="txtFirstName" name="txtfirstName"
+                               value="<?php print $firstName; ?>"
+                               tabindex="200" maxlength="45" placeholder="Billy"
+                               <?php if ($firstNameERROR) print 'class="mistake"'; ?>
+
+                               >
+                    </label>
+
+                    <label for="txtlastName" class="required">Last Name
+                        <input type="text" id="txtLastName" name="txtlastName"
+                               value="<?php print $lastName; ?>"
+                               tabindex="210" maxlength="45" placeholder="Bob"
+                               <?php if ($lastNameERROR) print 'class="mistake"'; ?>
+
+                               >
+                    </label>
+
+                    <fieldset class="radio"
+                              >   <!-- START gender radio -->
+                        <legend>Gender</legend>
+                        <label  <?php
+                               if ($genderERROR)
+                                   print 'class="mistake"';
+                               ?>><input type="radio" 
+                                id="radGenderMale" 
+                                name="radGender" 
+                                value="Male"
+                                <?php if ($gender == "Male") print 'checked="checked"'; ?>
+                                tabindex="210">Male</label>
+                        <label <?php
+                                if ($genderERROR)
+                                    print 'class="mistake"';
+                                ?>><input type="radio" 
+                                id="radGenderFemale" 
+                                name="radGender" 
+                                value="Female"
+                                <?php if ($gender == "Female") print 'checked="checked"' ?>
+                                tabindex="220">Female</label>
+                        <label <?php
+                                if ($genderERROR)
+                                    print 'class="mistake"';
+                                ?>><input type="radio" 
+                                id="radGenderOther" 
+                                name="radGender" 
+                                value="Other"
+                                <?php if ($gender == "Other") print 'checked="checked"'; ?>
+                                tabindex="230">Other</label>
+                    </fieldset> <!-- end gender radio -->
+                    <label id="lstBuilding">Age</label>               
+                    <select id="lstAge" 
+                            name="lstAge" 
+                            tabindex="420" >
+                        <option <?php if ($age == "Under18") print " selected "; ?>
+                            value="Under10">Under 18</option>
+
+                        <option <?php if ($age == "18-24") print " selected "; ?>
+                            value="18-24" >18-24</option>
+
+                        <option <?php if ($age == "25-35") print " selected "; ?>
+                            value="25-35" >25-35</option>
+
+                        <option <?php if ($age == "36-50") print " selected "; ?>
+                            value="36-50" >36-50</option>
+
+                        <option <?php if ($age == "Over51") print " selected "; ?>
+                            value="Over51" >Over 51</option>
+
+                    </select>
+                </fieldset>
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
