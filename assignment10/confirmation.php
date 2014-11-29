@@ -22,7 +22,7 @@ print '<h2>Registration Confirmed</h2>';
 //
 // SECTION: 1a.
 // variables for the classroom purposes to help find errors.
-$debug = false;
+$debug = true;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -31,7 +31,7 @@ if ($debug)
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 
 $adminEmail = "samuel.colburn@uvm.edu";
-$message = "<p>I am sorry but this project cannot be confrimed at this time. Please call (802) 656-1234 for help in resolving this matter.</p>";
+$message = "<p>I am sorry but this user cannot be confirmed at this time. Please call (802) 656-1234 for help in resolving this matter.</p>";
 
 
 //##############################################################
@@ -52,7 +52,7 @@ if (isset($_GET["q"])) {
     //##############################################################
     // get the membership record 
 
-    $Selectquery = "SELECT fldDateJoined, fldEmail , pmkRegisterId , fldConfirmed , fldUsername FROM tblUsers WHERE pmkUserId = ? ";
+    $Selectquery = "SELECT fldDateJoined, fldEmail , pmkUserId , fldPermissionLevel , fldUsername FROM tblUsers WHERE pmkUserId = ? ";
 
     $results = $thisDatabase->select($Selectquery, $data);
 
