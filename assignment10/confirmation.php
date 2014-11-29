@@ -22,7 +22,7 @@ print '<h2>Registration Confirmed</h2>';
 //
 // SECTION: 1a.
 // variables for the classroom purposes to help find errors.
-$debug = true;
+$debug = false;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }

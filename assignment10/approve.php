@@ -32,7 +32,7 @@ if ($debug)
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 
 $adminEmail = "samuel.colburn@uvm.edu";
-$message = "<p>I am sorry but this project cannot be confrimed at this time. Please call  0118 999 881 999 119 7253  for help in resolving this matter.</p>";
+$message = "<p>I am sorry but this project cannot be confirmed at this time. Please call  0118 999 881 999 119 7253  for help in resolving this matter.</p>";
 
 
 //##############################################################
@@ -53,7 +53,7 @@ if (isset($_GET["q"])) {
     //##############################################################
     // get the membership record 
 
-    $query = "SELECT fldUsername , fldDateJoined, fldEmail, pmkRegisterId FROM tblRegister WHERE pmkRegisterId = ? ";
+    $query = "SELECT fldUsername , fldDateJoined, fldEmail, pmkUserId FROM tblUsers WHERE UserId = ? ";
 
     $results = $thisDatabase->select($query, $data);
 
@@ -62,7 +62,7 @@ if (isset($_GET["q"])) {
 
     $dateSubmitted = $results[0]["fldDateJoined"];
     $email = $results[0]["fldEmail"];
-    $registerID = $results[0]["pmkRegisterId"];
+    $registerID = $results[0]["pmkUserId"];
     $Username = $results[0]["fldUsername"];
 
     //$key1crypt = sha1($key1);
@@ -88,7 +88,7 @@ if (isset($_GET["q"])) {
         if ($debug)
             print "<h1>Approved</h1>";
 
-        $query = "UPDATE tblRegister set fldApproved=1 WHERE pmkRegisterId = ? ";
+        $query = "UPDATE tblUsers set fldPermissionLevel = 2 WHERE pmkUserId = ? ";
         $results = $thisDatabase->update($query, $data);
 
         if ($debug) {
@@ -104,9 +104,9 @@ if (isset($_GET["q"])) {
         $to = $email;
         $cc = "";
         $bcc = "";
-        $from = "Assignment 6.0 <noreply@yoursite.com>";
+        $from = "Assignment 10 <noreply@yoursite.com>";
         $subject = "Your Registration has been Approved";
-        $message = '<p>You are now officially a member of Assignment 6.0! To access all of our great content, head over to <a href="' . $domain . $path_parts["dirname"] . '/home.php"> Assignment 6.0 </a> or if you would like to see our special offer on powdered donuts, please look under your seat.</p>';
+        $message = '<p>You are now officially a member of Assignment 10! To access all of our great content, head over to <a href="' . $domain . $path_parts["dirname"] . '/home.php"> Assignment 10 </a> or if you would like to see our special offer on powdered donuts, please look under your seat.</p>';
         $message .="<p>pringles in uncomfortable places.</p>";
         
         $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
