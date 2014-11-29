@@ -129,7 +129,7 @@ if (isset($_POST["btnSubmit"])) {
 
     
     //~~~~~~~~~~~~~USERNAME VALIDATION~~~~~~~~~~~
-    $usernamecheck = "SELECT fldUsername FROM tblRegister WHERE fldUsername = ? ";
+    $usernamecheck = "SELECT fldUsername FROM tblUsers WHERE fldUsername = ? ";
     $data = array($Username);
     $username_check_results = $thisDatabase->select($usernamecheck, $data);
 
@@ -194,7 +194,7 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = "INSERT INTO tblRegister SET fldEmail = ? , fldUsername = ? , fldPassword = ? ";
+            $query = "INSERT INTO tblUsers SET fldEmail = ? , fldUsername = ? , fldPassword = ? ";
             $data = array($email, $Username , $password);
             if ($debug) {
                 print "<p>sql " . $query;
@@ -227,7 +227,7 @@ if (isset($_POST["btnSubmit"])) {
             //#################################################################
             // create a key value for confirmation
 
-            $query = "SELECT fldDateJoined FROM tblRegister WHERE pmkRegisterId=" . $primaryKey;
+            $query = "SELECT fldDateJoined FROM tblUsers WHERE pmkUserId=" . $primaryKey;
             $results = $thisDatabase->select($query);
 
 
@@ -267,8 +267,8 @@ if (isset($_POST["btnSubmit"])) {
             $to = $email; // the person who filled out the form
             $cc = "";
             $bcc = "";
-            $from = "Assignment 6.0 <samuel.colburn@uvm.edu>";
-            $subject = "Thank you for Registering at Assignment6.0!";
+            $from = "Assignment 10 <samuel.colburn@uvm.edu>";
+            $subject = "Thank you for Registering at Assignment10!";
 
             $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         } //data entered  
