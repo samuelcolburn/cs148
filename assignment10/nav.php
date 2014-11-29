@@ -12,9 +12,9 @@
 
         /* example of repeating */
         if ($path_parts['filename'] == "crud") {
-            print '<li><a href="crud.php">Register</a></li>';
+            print '<li><a href="register.php">Register</a></li>';
         } else {
-            print '<li><a href="crud.php">Register</a></li>';
+            print '<li><a href="register.php">Register</a></li>';
         }
         ?>
     </ol>
