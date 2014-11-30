@@ -57,6 +57,8 @@ $gender = "";
 
 $age = "";
 
+$AboutMe = "";
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
@@ -72,7 +74,7 @@ $firstNameERROR = false;
 $lastNameERROR = false;
 $genderERROR = false;
 $ageERROR = false;
-
+$AboutMeERROR = false;
 
 //ERROR CONSTANTS
 //Username
@@ -82,6 +84,9 @@ $MAX_USERNAME_LENGTH = 15;
 //Password
 $MIN_PASSWORD_LENGTH = 6;
 $MAX_PASSWORD_LENGTH = 15;
+
+//About Me
+$ABOUTME_MAX_LENGTH = 200;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -124,14 +129,19 @@ if (isset($_POST["btnSubmit"])) {
 
     //--- PROFILE SANATIZE ---
 
-    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
+    $firstName = htmlentities($_POST["txtfirstName"], ENT_QUOTES, "UTF-8");
 
-    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
-    
+    $lastName = htmlentities($_POST["txtlastName"], ENT_QUOTES, "UTF-8");
+
     $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
-      
+
     $age = htmlentities($_POST["lstAge"], ENT_QUOTES, "UTF-8");
 
+    $AboutMe = htmlentities($_POST["AboutMe"], ENT_QUOTES, "UTF-8");
+    
+    if ($debug) {
+        print"<p>sanitize pass</p>";
+    }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2c Validation
@@ -189,6 +199,37 @@ if (isset($_POST["btnSubmit"])) {
         $passwordERROR = true;
     }
 
+    //++++++ PROFILE VALIDATION ++++++++++
+    // because profile entries are optional, don't check for empty
+    //~~~~~~~~~~ FIRST NAME ~~~~~~~~~~~~
+    if (!verifyAlphaNum2($firstName)) {
+        $errorMsg[] = "Your first name appears to not be a name!";
+        $firstNameERROR = true;
+    }
+
+    //~~~~~~~~~~ LAST NAME ~~~~~~~~~~~~
+    if (!verifyAlphaNum2($lastName)) {
+        $errorMsg[] = "Your last name appears to not be a name!";
+        $lastNameERROR = true;
+    }
+ 
+    
+       //~~~~~~~~~~ ABOUT ME ~~~~~~~~~~~~
+
+    if(strlen($AboutMe) > $ABOUTME_MAX_LENGTH){
+        $errorMsg[] = "Your description is too long!";
+        $AboutMeERROR = true;
+    }
+    elseif (!verifyAlphaNum($AboutMe)) {
+        $errorMsg[] = "Your personal description appears to contain characters other than those accepted. Please make sure to only use basic text.";
+        $AboutMeERROR = true;
+    }
+    
+    
+    
+       if ($debug) {
+        print"<p>validation pass</p>";
+    }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2d Process Form - Passed Validation
@@ -201,7 +242,7 @@ if (isset($_POST["btnSubmit"])) {
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
-        // SECTION: 2e Save Data
+        // USER DATA SQL
         //
 
         $primaryKey = "";
@@ -233,6 +274,35 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug)
                 print "Error!: " . $e->getMessage() . "</br>";
             $errorMsg[] = "There was a problem with accpeting your data please contact us directly.";
+        }
+
+        //@@@@@@@@@@@ PROFILE DATA SQL @@@@@@@@@@@@@@@@
+        try {
+            $thisDatabase->db->beginTransaction();
+            $query = "INSERT INTO tblProfile SET fnkUserId = ? ,  fldFirstName = ? , fldLastName = ? , fldGender = ? , fldAge = ? ,fldAboutMe = ? ";
+            $data = array($primaryKey, $firstName, $lastName, $gender, $age , $AboutMe);
+            if ($debug) {
+                print "<p>sql " . $query;
+                print"<p><pre>";
+                print_r($data);
+                print"</pre></p>";
+            }
+
+
+            $resultsProfile = $thisDatabase->insert($query, $data);
+
+
+
+// all sql statements are done so lets commit to our changes
+            $dataEntered = $thisDatabase->db->commit();
+            $dataEntered = true;
+            if ($debug)
+                print "<p>transaction complete ";
+        } catch (PDOExecption $e) {
+            $thisDatabase->db->rollback();
+            if ($debug)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accepting your data please contact us directly.";
         }
         // If the transaction was successful, give success message
         if ($dataEntered) {
@@ -355,7 +425,7 @@ if (isset($_POST["btnSubmit"])) {
                 <legend>Register Today</legend>
                 <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
-                    <legend>Please complete the following form</legend>
+                    <legend>Required Information</legend>
                     <fieldset class="contact">
                         <legend></legend>
                         <label for="txtUsername" class="required">Username
@@ -418,27 +488,27 @@ if (isset($_POST["btnSubmit"])) {
                               >   <!-- START gender radio -->
                         <legend>Gender</legend>
                         <label  <?php
-                               if ($genderERROR)
-                                   print 'class="mistake"';
-                               ?>><input type="radio" 
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
                                 id="radGenderMale" 
                                 name="radGender" 
                                 value="Male"
                                 <?php if ($gender == "Male") print 'checked="checked"'; ?>
                                 tabindex="210">Male</label>
                         <label <?php
-                                if ($genderERROR)
-                                    print 'class="mistake"';
-                                ?>><input type="radio" 
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
                                 id="radGenderFemale" 
                                 name="radGender" 
                                 value="Female"
                                 <?php if ($gender == "Female") print 'checked="checked"' ?>
                                 tabindex="220">Female</label>
                         <label <?php
-                                if ($genderERROR)
-                                    print 'class="mistake"';
-                                ?>><input type="radio" 
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
                                 id="radGenderOther" 
                                 name="radGender" 
                                 value="Other"
@@ -465,7 +535,11 @@ if (isset($_POST["btnSubmit"])) {
                             value="Over51" >Over 51</option>
 
                     </select>
-                </fieldset>
+                    <labebl id ="AboutMe" for = AboutMe>About Me</label>
+                    <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php print "'$ABOUTME_MAX_LENGTH'";
+                    if ($AboutMeERROR){ print 'class = "mistake"';}
+                    ?>></textarea>
+                </fieldset> <!-- End Profile -->
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
