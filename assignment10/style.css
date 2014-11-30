@@ -412,5 +412,7 @@ tr:nth-child(odd){
 
 tr:hover{
     background-color:#558C89;
+    cursor: pointer;
+    text-decoration: underline;
 
 }

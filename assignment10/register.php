@@ -535,7 +535,7 @@ if (isset($_POST["btnSubmit"])) {
                             value="Over51" >Over 51</option>
 
                     </select>
-                    <labebl id ="AboutMe" for = AboutMe>About Me</label>
+                    <label id ="AboutMe" for = AboutMe>About Me</label>
                     <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php print "'$ABOUTME_MAX_LENGTH'";
                     if ($AboutMeERROR){ print 'class = "mistake"';}
                     ?>></textarea>
