@@ -2,19 +2,24 @@
 <nav>
     <ol>
         <?php
-        /* This sets the current page to not be a link. Repeat this if block for
-         *  each menu item */
+        /* HOME */
         if ($path_parts['filename'] == "home") {
             print '<li><a href="home.php">Home</a></li>';
         } else {
             print '<li><a href="home.php">Home</a></li>';
         }
 
-        /* example of repeating */
-        if ($path_parts['filename'] == "crud") {
-            print '<li><a href="register.php">Register</a></li>';
+        /* PRODUCT LIST PAGE */
+        if ($path_parts['filename'] == "products") {
+            print '<li><a href="products.php">Products</a></li>';
         } else {
-            print '<li><a href="register.php">Register</a></li>';
+            print '<li><a href="products.php">Products</a></li>';
+        }
+        /* ADMIN PAGE */
+                if ($path_parts['filename'] == "admin") {
+            print '<li><a href="admin.php">Admin</a></li>';
+        } else {
+            print '<li><a href="admin.php">Admin</a></li>';
         }
         ?>
     </ol>

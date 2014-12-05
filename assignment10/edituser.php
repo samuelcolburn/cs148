@@ -1,19 +1,32 @@
 <?php
-//this is a  page to display a user's profile.
+/* the purpose of this page is to display a form to allow a person to register
+ * the form will be sticky meaning if there is a mistake the data previously 
+ * entered will be displayed again. Once a form is submitted (to this same page)
+ * we first sanitize our data by replacing html codes with the html character.
+ * then we check to see if the data is valid. if data is valid enter the data 
+ * into the table and we send and dispplay a confirmation email message. 
+ * 
+ * if the data is incorrect we flag the errors.
+ * 
+ * Written By: Sam Colburn samuel.colburn@uvm.edu
+ * Last updated on: October 22, 2014
+ * 
+ * 
+ */
+
 include "top.php";
-
-
-
+//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
+//
+// SECTION: 1 Initialize variables
+//
+// SECTION: 1a.
+// variables for the classroom purposes to help find errors.
 $debug = true;
-
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
-
 if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
-
-
 
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -31,42 +44,64 @@ $yourURL = $domain . $phpSelf;
 // Initialize variables one for each form element
 // in the order they appear on the form
 //@@ USER DATA @@
-//get username
+
 if (isset($_GET["user"])) {
 
-//sanitize username
+    //sanitize username
     $username = htmlentities($_GET["user"], ENT_QUOTES, "UTF-8");
 
-//basic tags
-    print "<article id=main>";
-
-//title of the page is the name of the user
-    print "<h2>" . $username . "</h2>";
-
-
-    if ($debug) {
-        print "<p>username = " . $username . "</p>";
-    }
-
-// @@@@ SQL @@@
-//Select user from tblUsers with the given username
+    // USER ACCOUNT DATA VARIALBE SET
     $data = array($username);
 
-    $query = "SELECT fldUsername , fldPassword, fldEmail , fldDateJoined , fldPermissionLevel , pmkUserId FROM tblUsers WHERE fldUsername = ?";
+    $query = "SELECT fldUsername , fldPassword, fldEmail , fldDateJoined , fldPermissionLevel ,pmkUserId FROM tblUsers WHERE fldUsername = ?";
 
-//@@@ STORE  results
+    //@@@ STORE  results
     $results = $thisDatabase->select($query, $data);
-
+    $Username = $results[0]["fldUsername"];
     $UserID = $results[0]["pmkUserId"];
     $email = $results[0]["fldEmail"];
     $password = $results[0]["fldPassword"];
-    $permissionlevel = $results[0]["fldPermissionLevel"];
-    $Username = $results[0]["fldUsername"];
-}
+    $permissionLevel = $results[0]["fldPermissionLevel"];
 
-if ($debug) {
-    print"select results";
-    print_r($results);
+    //PROFILE DATA VARIABLE  SET
+    $query = "SELECT fldFirstName , fldLastName , fldGender , fldAge ,fldAboutMe FROM tblProfile WHERE fnkUserId = ?";
+    $data = array($UserID);
+
+    $results = $thisDatabase->select($query, $data);
+
+    $firstName = $results[0]["fldFirstName"];
+    $lastName = $results[0]["fldLastName"];
+    $gender = $results[0]["fldGender"];
+    $age = $results[0]["fldAge"];
+    $AboutMe = $results[0]["fldAboutMe"];
+
+    if (!empty($results)) {
+        $insert = true;
+    }
+
+    if ($debug) {
+        print_r($data);
+        print $query;
+        print_r($results);
+        print $lastName;
+        print $firstName;
+        print $gender;
+    }
+} else {
+    $email = "samuel.colburn@uvm.edu";
+    $Username = '';
+    $password = '';
+
+// @@ PROFILE DATA @@
+    $firstName = "";
+
+    $lastName = "";
+
+    $gender = "";
+
+    $age = "";
+
+    $AboutMe = "";
 }
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -77,9 +112,13 @@ if ($debug) {
 $emailERROR = false;
 $UsernameERROR = false;
 $passwordERROR = false;
-$permissionlevelERROR = true;
 
-
+//PROFILE ERROR FLAGS
+$firstNameERROR = false;
+$lastNameERROR = false;
+$genderERROR = false;
+$ageERROR = false;
+$AboutMeERROR = false;
 
 //ERROR CONSTANTS
 //Username
@@ -90,6 +129,8 @@ $MAX_USERNAME_LENGTH = 15;
 $MIN_PASSWORD_LENGTH = 6;
 $MAX_PASSWORD_LENGTH = 15;
 
+//About Me
+$ABOUTME_MAX_LENGTH = 200;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -112,25 +153,34 @@ if (isset($_POST["btnSubmit"])) {
 //
 // SECTION: 2a Security
 ///
-    /*
-      if (!securityCheck(true)) {
-      $msg = "<p>Sorry you cannot access this page. ";
-      $msg.= "Security breach detected and reported</p>";
-      die($msg);
-      }
-     */
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2b Sanitize (clean) data
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
+
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
 
     $Username = htmlentities($_POST["txtUsername"], ENT_QUOTES, "UTF-8");
 
     $password = htmlentities($_POST["Password"], ENT_QUOTES, "UTF-8");
 
-    $permissionlevel = htmlentities($_POST["lstPermissionLevel"], ENT_QUOTES, "UTF-8");
+
+    //--- PROFILE SANATIZE ---
+
+    $firstName = htmlentities($_POST["txtfirstName"], ENT_QUOTES, "UTF-8");
+
+    $lastName = htmlentities($_POST["txtlastName"], ENT_QUOTES, "UTF-8");
+
+    $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
+
+    $age = htmlentities($_POST["lstAge"], ENT_QUOTES, "UTF-8");
+
+    $AboutMe = htmlentities($_POST["AboutMe"], ENT_QUOTES, "UTF-8");
+
+    // --- HIDDEN INPUTS
+    $UserID = htmlentities($_POST["hidUserID"], ENT_QUOTES, "UTF-8");
+    $username = htmlentities($_POST["hidusername"], ENT_QUOTES, "UTF-8");
 
 
     if ($debug) {
@@ -146,7 +196,7 @@ if (isset($_POST["btnSubmit"])) {
 // order that the elements appear on your form so that the error messages
 // will be in the order they appear. errorMsg will be displayed on the form
 // see section 3b. The error flag ($emailERROR) will be used in section 3c.
-//~~~~~~~~~~~EMAIL VALIDATION~~~~~~~~~~
+    //~~~~~~~~~~~EMAIL VALIDATION~~~~~~~~~~
     if ($email == "") {
         $errorMsg[] = "Please enter your email address";
         $emailERROR = true;
@@ -156,10 +206,11 @@ if (isset($_POST["btnSubmit"])) {
     }
 
 
-//~~~~~~~~~~~~~USERNAME VALIDATION~~~~~~~~~~~
+    //~~~~~~~~~~~~~USERNAME VALIDATION~~~~~~~~~~~
     $usernamecheck = "SELECT fldUsername FROM tblUsers WHERE fldUsername = ? ";
     $data = array($Username);
     $username_check_results = $thisDatabase->select($usernamecheck, $data);
+    $username_check = $username_check_results[0]["fldUsername"];
 
     if ($Username == "") {
         $errorMsg[] = "Please enter a username";
@@ -173,12 +224,20 @@ if (isset($_POST["btnSubmit"])) {
     } elseif (!verifyAlphaNum2($Username)) {
         $errorMsg[] = "Invalid Username";
         $UsernameERROR = true;
+    } elseif ($username_check == $username) {
+        $UsernameERROR = false;
     } elseif (!empty($username_check_results)) {
         $errorMsg[] = 'That username is already in use. Please choose a different username.';
         $UsernameERROR = true;
     }
 
-//~~~~~~PASSWORD VALIDATION~~~~~~~~~~~
+
+    if ($debug) {
+        print "<p> usercheck = " . $username_check . "</p>";
+        print "<p> username =" . $username . "</p>";
+    }
+
+    //~~~~~~PASSWORD VALIDATION~~~~~~~~~~~
     if ($password == '') {
         $errorMsg[] = "Please enter a password";
         $passwordERROR = true;
@@ -193,9 +252,38 @@ if (isset($_POST["btnSubmit"])) {
         $passwordERROR = true;
     }
 
+    //++++++ PROFILE VALIDATION ++++++++++
+    // because profile entries are optional, don't check for empty
+    //~~~~~~~~~~ FIRST NAME ~~~~~~~~~~~~
+    if (!verifyAlphaNum2($firstName)) {
+        $errorMsg[] = "Your first name appears to not be a name!";
+        $firstNameERROR = true;
+    }
+
+    //~~~~~~~~~~ LAST NAME ~~~~~~~~~~~~
+    if (!verifyAlphaNum2($lastName)) {
+        $errorMsg[] = "Your last name appears to not be a name!";
+        $lastNameERROR = true;
+    }
+
+
+    //~~~~~~~~~~ ABOUT ME ~~~~~~~~~~~~
+
+    if (strlen($AboutMe) > $ABOUTME_MAX_LENGTH) {
+        $errorMsg[] = "Your description is too long!";
+        $AboutMeERROR = true;
+    } elseif ($AboutMe == '') {
+        $AboutMeERROR = false;
+    } elseif (!verifyAlphaNum($AboutMe)) {
+        $errorMsg[] = "Your personal description appears to contain characters other than those accepted. Please make sure to only use basic text.";
+        $AboutMeERROR = true;
+    }
+
+
 
 
     if ($debug) {
+        print "<p> about me = " . $AboutMe . "</p>";
         print"<p>validation pass</p>";
     }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -208,21 +296,17 @@ if (isset($_POST["btnSubmit"])) {
         if ($debug)
             print "<p>Form is valid</p>";
 
-//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-//
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        //
         // USER DATA SQL
-//
-        if ($debug) {
-            print"select results";
-            print_r($results);
-        }
+        //
 
         $primaryKey = "";
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = "UPDATE tblUsers SET fldEmail = ? , fldUsername = ? , fldPassword = ? , fldPermissionLevel = ? WHERE fldUsername = ? ";
-            $data = array($email, $Username, $password, $permissionlevel, $username);
+            $query = "UPDATE tblUsers SET fldEmail = ? , fldUsername = ? , fldPassword = ? WHERE pmkUserID = ?";
+            $data = array($email, $Username, $password, $UserID);
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -231,6 +315,50 @@ if (isset($_POST["btnSubmit"])) {
             }
             $results = $thisDatabase->update($query, $data);
 
+
+            $primaryKey = $thisDatabase->lastInsert();
+            if ($debug)
+                print "<p>pmk= " . $primaryKey;
+
+// all sql statements are done so lets commit to our changes
+            $dataEntered = $thisDatabase->db->commit();
+            $dataEntered = true;
+            if ($debug)
+                print "<p>transaction complete ";
+        } catch (PDOExecption $e) {
+            $thisDatabase->db->rollback();
+            if ($debug)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accpeting your data please contact us directly.";
+        }
+
+        //@@@@@@@@@@@ PROFILE DATA SQL @@@@@@@@@@@@@@@@
+        try {
+            $thisDatabase->db->beginTransaction();
+
+            if ($insert) {
+                $query = "INSERT INTO";
+            } else {
+                $query = "UPDATE";
+            }
+            $query .= " tblProfile SET  fldFirstName = ? , fldLastName = ? , fldGender = ? , fldAge = ? ,fldAboutMe = ?";
+
+            if ($insert) {
+                $query .= " , fnkUserId = ? ";
+            } else {
+                $query .=' WHERE fnkUserId = ? ';
+            }
+
+            $data = array($firstName, $lastName, $gender, $age, $AboutMe, $UserID);
+            if ($debug) {
+                print "<p>sql " . $query;
+                print"<p><pre>";
+                print_r($data);
+                print"</pre></p>";
+            }
+
+
+            $resultsProfile = $thisDatabase->update($query, $data);
 
 
 
@@ -245,21 +373,21 @@ if (isset($_POST["btnSubmit"])) {
                 print "Error!: " . $e->getMessage() . "</br>";
             $errorMsg[] = "There was a problem with accepting your data please contact us directly.";
         }
-
-
-// If the transaction was successful, give success message
+        // If the transaction was successful, give success message
         if ($dataEntered) {
             if ($debug)
                 print "<p>data entered now prepare keys ";
-//#################################################################
-// create a key value for confirmation
+            //#################################################################
+            // create a key value for confirmation
 
+            $query = "SELECT fldDateJoined FROM tblUsers WHERE pmkUserId=" . $primaryKey;
+            $results = $thisDatabase->select($query);
 
 
             $dateSubmitted = $results[0]["fldDateJoined"];
 
             $key1 = sha1($dateSubmitted);
-            $key2 = $UserID;
+            $key2 = $primaryKey;
 
             if ($debug)
                 print "<p>key 1: " . $key1;
@@ -267,32 +395,33 @@ if (isset($_POST["btnSubmit"])) {
                 print "<p>key 2: " . $key2;
 
 
-//#################################################################
-//
+            //#################################################################
+            //
             //Put forms information into a variable to print on the screen
-//
+            //
 
-            $messageA = '<h2>Your Account has been Updated</h2>';
+            $message = '<h2>Thank you for updating your account.</h2>';
 
-            $messageB = "<p>Someone has updated your account info at our site.</p>";
-            $messageB .= "<p>Username: " . $Username . "</p>";
-            $messageB .= "<p>Password: " . $password . "</p>";
-            $messageB .= "<p>Email Address: " . $email . "</p>";
-            $messageB .= "<p> If this wasn't you, please contact one of our administrators immediately, as your account may have been hacked. </p>";
-            $messageB .= "<p> Otherwise, have a great day!</p>";
+            $message .= "<p>Your account" . $username . "has been updated";
+            $message .= "<p> New username: " . $Username . "</p>";
+            $message .= "<p> New password: " . $password . "</p>";
+            $message .= "<p> New email: " . $email . "</p>";
+            $message .= "<p> If you did not make these changes, please contact site admins immediately.</p>";
+            $message .= "<a href= https://smcolbur.w3.uvm.edu/cs148/assignment10/home.php>Assignment 10</a>";
 
 
-//##############################################################
-//
+
+            //##############################################################
+            //
             // email the form's information
-//
+            //
             $to = $email; // the person who filled out the form
             $cc = "";
             $bcc = "";
             $from = "Assignment 10 <samuel.colburn@uvm.edu>";
-            $subject = "Your Account Has Been Updated";
+            $subject = "Your account at Assignment10 has been updated.";
 
-            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+            // $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
         } //data entered  
     } // end form is valid
 } // ends if form was submitted.
@@ -318,12 +447,12 @@ if (isset($_POST["btnSubmit"])) {
             print "not ";
         }
         print "been processed</h2>";
-        print "<p>An email with your registration information has ";
+        print "<p>An email with your updated information has ";
         if (!$mailed) {
             print "not ";
         }
         print "been sent";
-        print " to " . $email . ". Please check your email to confirm this update.</p>";
+        print " to " . $email . " detailing the updates. Please check your email to confirm these updates to your account.</p>";
     } else {
 //####################################
 //
@@ -366,13 +495,13 @@ if (isset($_POST["btnSubmit"])) {
                     <legend>Required Information</legend>
                     <fieldset class="contact">
                         <legend></legend>
-                        
-                           <input type="hidden" id="hidUserID" name="hidUserID"
-                       value="<?php print $UserID; ?>"
-                       >
-                              <input type="hidden" id="hidPermmissionLevel" name="hidPermissionLevel"
-                       value="<?php print $permissionlevel; ?>"
-                       >
+
+                        <input type="hidden" id="hidUserID" name="hidUserID"
+                               value="<?php print $UserID; ?>"
+                               >
+                        <input type="hidden" id="hidusername" name="hidusername"
+                               value="<?php print $username; ?>"
+                               >
                         <label for="txtUsername" class="required">Username
                             <input type="text" id="txtUsername" name="txtUsername"
                                    value="<?php print $Username; ?>"
@@ -399,35 +528,95 @@ if (isset($_POST["btnSubmit"])) {
                                    <?php if ($emailERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
-
                         </label>
-                        <!-- START Listbox 
-                                     <label id="lstPermissionLevel">Permission Level</label>               
-                           <select id="lstPermissionLevel" 
-                                   name="lstPermissionLevel" 
-                                   tabindex="420" >
-                               <option <?php if ($age == 0) print " selected "; ?>
-                                   value= 0 >Unconfirmed User</option>
-       
-                               <option <?php if ($age == 1) print " selected "; ?>
-                                   value= 1 >Confirmed User</option>
-       
-                               <option <?php if ($age == 2) print " selected "; ?>
-                                   value=2 >Approved User</option>
-       
-                               <option <?php if ($age == 3) print " selected "; ?>
-                                   value=3 >Administrator</option>
-       
-        
-       
-                           </select>-->
-                        <!-- End ListBox -->
+
                     </fieldset>
                     <!-- ends User Form -->
                 </fieldset> 
 
                 <!-- ends wrapper Two -->
 
+                <!-- Profile Form -->
+                <fieldset class ="Profile">
+                    <legend>Optional Profile</legend>
+
+                    <label for="txtfirstName" class="required">First Name
+                        <input type="text" id="txtFirstName" name="txtfirstName"
+                               value="<?php print $firstName; ?>"
+                               tabindex="200" maxlength="45" placeholder="Billy"
+                               <?php if ($firstNameERROR) print 'class="mistake"'; ?>
+
+                               >
+                    </label>
+
+                    <label for="txtlastName" class="required">Last Name
+                        <input type="text" id="txtLastName" name="txtlastName"
+                               value="<?php print $lastName; ?>"
+                               tabindex="210" maxlength="45" placeholder="Bob"
+                               <?php if ($lastNameERROR) print 'class="mistake"'; ?>
+
+                               >
+                    </label>
+
+                    <fieldset class="radio"
+                              >   <!-- START gender radio -->
+                        <legend>Gender</legend>
+                        <label  <?php
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
+                                id="radGenderMale" 
+                                name="radGender" 
+                                value="Male"
+                                <?php if ($gender == "Male") print 'checked="checked"'; ?>
+                                tabindex="210">Male</label>
+                        <label <?php
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
+                                id="radGenderFemale" 
+                                name="radGender" 
+                                value="Female"
+                                <?php if ($gender == "Female") print 'checked="checked"' ?>
+                                tabindex="220">Female</label>
+                        <label <?php
+                        if ($genderERROR)
+                            print 'class="mistake"';
+                        ?>><input type="radio" 
+                                id="radGenderOther" 
+                                name="radGender" 
+                                value="Other"
+                                <?php if ($gender == "Other") print 'checked="checked"'; ?>
+                                tabindex="230">Other</label>
+                    </fieldset> <!-- end gender radio -->
+                    <label id="lstAge">Age</label>               
+                    <select id="lstAge" 
+                            name="lstAge" 
+                            tabindex="420" >
+                        <option <?php if ($age == "Under18") print " selected "; ?>
+                            value="Under10">Under 18</option>
+
+                        <option <?php if ($age == "18-24") print " selected "; ?>
+                            value="18-24" >18-24</option>
+
+                        <option <?php if ($age == "25-35") print " selected "; ?>
+                            value="25-35" >25-35</option>
+
+                        <option <?php if ($age == "36-50") print " selected "; ?>
+                            value="36-50" >36-50</option>
+
+                        <option <?php if ($age == "Over51") print " selected "; ?>
+                            value="Over51" >Over 51</option>
+
+                    </select>
+                    <label id ="AboutMe" for = AboutMe>About Me</label>
+                    <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php
+                    print "'$ABOUTME_MAX_LENGTH'";
+                    if ($AboutMeERROR) {
+                        print 'class = "mistake"';
+                    }
+                    ?>></textarea>
+                </fieldset> <!-- End Profile -->
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Update" tabindex="900" class="button">
@@ -447,6 +636,4 @@ if ($debug)
     print "<p>END OF PROCESSING</p>";
 ?>
 </body>
-</html> 
-
-
+</html>
