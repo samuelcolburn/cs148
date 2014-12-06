@@ -1,17 +1,24 @@
-<?php
-//this is a  page to display a user's profile.
-include "top.php";
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Assignment 10</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Sam Colburn">
+        <meta name="description" content="product website">
 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/sin/trunk/html5.js"></script>
+        <![endif]-->
 
-$debug = false;
+        <link rel="stylesheet" href="style.css" type="text/css" media="screen">
 
-if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
-    $debug = true;
-}
+        <?php
+        // Start the session
+        session_start();
+        $debug = false;
 
-if ($debug)
-    print "<p>DEBUG MODE IS ON</p>";
 
 
 // Unset all of the session variables.
@@ -26,21 +33,42 @@ if (ini_get("session.use_cookies")) {
         $params["secure"], $params["httponly"]
     );
 }
-
 // Finally, destroy the session.
 session_destroy();
-exit;
+
+//Redirect back to home page
+//header("Location: https://smcolbur.w3.uvm.edu/cs148/assignment10/home.php");
+
+
+
+
+//exit;
 
 ?>
-<article>
-</article>  
+
+<script type="text/javascript">
+<!--
+function delayer(){
+    window.location = "home.php"
+}
+//-->
+</script>
+</head>
+<body onLoad="setTimeout('delayer()', 0000)">
+<h2>You have been logged out.</h2>
+<p>You should be redirected to the home page. If not, click this link: <a href ='home.php'> home</a>.</p>
+
 <?php
+
 include "footer.php";
 
 if ($debug)
     print "<p>END OF PROCESSING</p>";
-?>
 
+?>
+</article>
 </body>
 </html>
-
+<?php
+die();
+?>

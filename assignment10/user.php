@@ -40,41 +40,40 @@ if (isset($_GET["user"])) {
     //@@@ STORE  results
     $results = $thisDatabase->select($query, $data);
     $UserID = $results[0]["pmkUserId"];
-    
-    if($debug){
-        print "<p>pmk=". $UserID."</p>";
-        print "<p>query = ".$query."</p>";
+
+    if ($debug) {
+        print "<p>pmk=" . $UserID . "</p>";
+        print "<p>query = " . $query . "</p>";
         print_r($data);
-         print_r($results);
+        print_r($results);
     }
-    
+
 
 
     //@@@@ DISPLAY RESULTS @@@@
-    print "<h3> Account Information </h3>";
+    // check if their username is the same as the person logged in, or if admin.
+    // only display account information if its the user or the admin.
+    if ($_SESSION["user"] == $username Or $_SESSION["admin"]) {
+        print "<h3> Account Information </h3>";
 
-   // print "<table class = userinfo>";
-    foreach ($results as $row) {
-        foreach ($row as $field => $value) {
-           // print "<tr>";
-            if (!is_int($field)) {
+        print "<table class = userinfo>";
+        foreach ($results as $row) {
+            foreach ($row as $field => $value) {
 
-                $field = preg_replace(' /(?<! )(?<!^)(?<![A-Z])[A-Z]/', ' $0', substr($field, 3));
+                if (!is_int($field)) {
+                    print "<tr>";
+                    $field = preg_replace(' /(?<! )(?<!^)(?<![A-Z])[A-Z]/', ' $0', substr($field, 3));
 
-                    print "<p>" . $field. "&emsp;&emsp;";
-                print $value . "</p>\n";
+                    print "<td>" . $field /*  comment out added spaces . "&emsp;&emsp;" */ . "</td>";
+                    print "<td>" . $value . "</td>";
+                    print"</tr>\n";
+                }
             }
-           // print"</tr>";
         }
     }
-   // print"</table>";
-
-    print"<p><a href = edituser.php?user=".$username.">Edit</a></p>";
-
-
-
+    print"</table>";
     //@@@ Select information from tblProfile connected to the user @@@
-    
+
 
     $data = array($UserID);
 
@@ -84,36 +83,39 @@ if (isset($_GET["user"])) {
     //@@@ STORE  query results @@@
     $results = $thisDatabase->select($query, $data);
 
+
     // @@@@ DISPLAY PROFILE RESULTS @@@
     print "<h3>Personal Profile</h3>";
-    
-    if($debug){
-        print "<p>pmk=". $UserID."</p>";
-        print "<p>query = ".$query."</p>";
+
+    if ($debug) {
+        print "<p>pmk=" . $UserID . "</p>";
+        print "<p>query = " . $query . "</p>";
         print_r($data);
-         print_r($results);
+        print_r($results);
     }
-   
-    print "<table class = personalinfo>";
+
+     print "<table class = personalinfo>";
 
     foreach ($results as $row) {
         foreach ($row as $field => $value) {
-            print "<tr>";
-            if (!is_int($field)) {
 
+            if (!is_int($field)) {
+                print "<tr>";
                 $field = preg_replace(' /(?<! )(?<!^)(?<![A-Z])[A-Z]/', ' $0', substr($field, 3));
 
                 print "<td>" . $field . "</td>";
-                print "<td>" . $value . "</td>\n";
+                print "<td>" . $value . "</td>";
+                print"</tr>\n";
             }
-            print"</tr>";
         }
     }
-    print"</table>";
-    
-    print"<p><a href = editprofile.php?user=".$username.">Edit</a></p>";
-    
-    print"<p><a href = deleteuser.php?user=".$username.">DELETE ACCOUNT</a></p>";
+     print"</table>";
+    // print edit and delte buttons only if user or admin 
+    if ($_SESSION["user"] == $username Or $_SESSION["admin"]) {
+        print"<p><a href = edituser.php?user=" . $username . ">Edit</a></p>";
+
+        print"<p><a href = deleteuser.php?user=" . $username . ">DELETE</a></p>";
+    }
 }
 
 //@@ FOOTER @@

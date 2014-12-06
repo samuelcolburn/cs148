@@ -3,6 +3,8 @@
 include "top.php";
 
 print "<article id=main>";
+
+if ($_SESSION["admin"]) {
 print "<h2>User List</h2>";
 
 $debug = false;
@@ -78,7 +80,10 @@ foreach ($results as $row) {
     print "</a></tr>\n";
 }
 print "</table>\n";
-
+}
+else{
+    print"<h2>ACESS DENIED</h2>";
+}
 
 include "footer.php";
 if ($debug)

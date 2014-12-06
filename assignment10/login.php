@@ -17,7 +17,7 @@ include "top.php";
 //
 // SECTION: 1a.
 // variables for the classroom purposes to help find errors.
-$debug = true;
+$debug = false;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -126,8 +126,9 @@ if (isset($_POST["btnSubmit"])) {
     $password_check = $results[0]['fldPassword'];
     $permission = $results[0]['fldPermissionLevel'];
     
+    if($debug){
     print $permission;
-
+    }
     //~~~~~~~~~~~~~USERNAME VALIDATION~~~~~~~~~~~
 
     if ($Username == "") {
@@ -198,11 +199,34 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
     if($debug){
         print $_SESSION["admin"];
     }
+    
+?>
+
+     <!--- Javascript to redirect to the homepage after logins -->
+   <script type="text/javascript">
+<!--
+function delayer(){
+    window.location = "home.php"
+}
+//-->
+</script>
+<!--TIMER -->
+<body onLoad="setTimeout('delayer()', 0000)"> 
+<h2>You are now logged in.</h2>
+<p>You should be redirected to the home page. If not, click this link: <a href ='home.php'> home</a>.</p>
+
+    
+<?php
 } else {
+  
 //####################################
 //
 // SECTION 3b Error Messages
 //
+
+ 
+    
+    
 // display any error messages before we print out the form
     if ($errorMsg) {
         print '<div id="errors">';
@@ -234,10 +258,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
               id="frmLogin">
             <fieldset class="wrapper">
 
-                <legend>Register Today</legend>
+                <legend>Login</legend>
                 <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
-                    <legend>Login</legend>
+                    <legend></legend>
                     <fieldset class="contact">
                         <legend></legend>
                         <label for="txtUsername" class="required">Username

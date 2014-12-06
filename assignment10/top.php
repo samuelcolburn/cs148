@@ -17,7 +17,7 @@
         <?php
         // Start the session
         session_start();
-        $debug = true;
+        $debug = false;
 
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
