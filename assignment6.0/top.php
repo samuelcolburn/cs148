@@ -15,6 +15,11 @@
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
 
         <?php
+        
+        // START SESSION
+        session_start();
+        
+ 
         $debug = false;
 
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -67,6 +72,27 @@
 
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+        
+        
+       // CHECK USER SESSION
+        if (!empty($_SESSION["user"])){
+            
+            $data = array($_SESSION["user"]);
+            
+            $query = "SELECT FROM tblUsers fldUsername , pmkUserId WHERE fldUsername = ? ";
+            
+            $results = $thisDatabase->select($query);
+            
+            $session_username = $results[0]['fldUsername'];
+            $session_pmkUserID = $results[0]['fldUserId'];
+            
+            if ($debug){
+                print_r($results);
+            }
+                  
+            
+        }
+        
         ?>	
 
     </head>

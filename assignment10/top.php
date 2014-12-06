@@ -15,7 +15,9 @@
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
 
         <?php
-        $debug = false;
+        // Start the session
+        session_start();
+        $debug = true;
 
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -67,6 +69,31 @@
 
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+
+        // CHECK USER SESSION
+        if ($debug) {
+            print $_SESSION["user"];
+        }
+
+        if (!empty($_SESSION["user"])) {
+
+            $data = array($_SESSION["user"]);
+
+            $query = "SELECT fldUsername , pmkUserId FROM tblUsers  WHERE fldUsername = ? ";
+
+            $results = $thisDatabase->select($query , $data);
+
+            $session_username = $results[0]['fldUsername'];
+            $session_pmkUserID = $results[0]['fldUserId'];
+
+            if ($debug) {
+                print"<p>Data </p>";
+                print_r($data);
+                print "sql = " . $query;
+                print"<p> results = </p>";
+                print_r($results);
+            }
+        }
         ?>	
 
     </head>

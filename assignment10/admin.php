@@ -12,16 +12,26 @@ if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
 
 if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
-?>
+
+$message = '<h2> ACCESS DENIED</p>';
+
+print '<article>';
+
+if ($_SESSION["admin"]) {
+    
+       $message = "<p><a href = 'userlist.php'>User List</a></p>";
+       $message .= " <p><a href = 'products.php'>Product List</a></p>";
 
 
-<article>
-    <p><a href = 'userlist.php'>User List</a></p>
-    <p><a href = 'products.php'>Product List</a></p>
+    
+}//ending if admin else clause
+//
+//~~~~~~ print relevant message
+print $message;
 
-
-<?php
 //@@ FOOTER @@
+
+
 include "footer.php";
 
 if ($debug)

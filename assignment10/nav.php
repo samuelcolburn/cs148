@@ -16,10 +16,12 @@
             print '<li><a href="products.php">Products</a></li>';
         }
         /* ADMIN PAGE */
-                if ($path_parts['filename'] == "admin") {
-            print '<li><a href="admin.php">Admin</a></li>';
-        } else {
-            print '<li><a href="admin.php">Admin</a></li>';
+        if ($_SESSION["admin"]) {
+            if ($path_parts['filename'] == "admin") {
+                print '<li><a href="admin.php">Admin</a></li>';
+            } else {
+                print '<li><a href="admin.php">Admin</a></li>';
+            }
         }
         ?>
     </ol>

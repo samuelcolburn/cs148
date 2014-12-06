@@ -88,7 +88,7 @@ if (isset($_GET["q"])) {
         if ($debug)
             print "<h1>Approved</h1>";
 
-        $query = "UPDATE tblUsers set fldPermissionLevel = 2 WHERE pmkUserId = ? ";
+        $query = "UPDATE tblUsers SET fldPermissionLevel = 2 WHERE pmkUserId = ? ";
         $results = $thisDatabase->update($query, $data);
 
         if ($debug) {
