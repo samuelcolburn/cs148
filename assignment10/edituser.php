@@ -61,7 +61,7 @@ if (isset($_GET["user"])) {
     $UserID = $results[0]["pmkUserId"];
     $email = $results[0]["fldEmail"];
     $password = $results[0]["fldPassword"];
-    $permissionLevel = $results[0]["fldPermissionLevel"];
+    $PermissionLevel = $results[0]["fldPermissionLevel"];
 
     //PROFILE DATA VARIABLE  SET
     $query = "SELECT fldFirstName , fldLastName , fldGender , fldAge ,fldAboutMe FROM tblProfile WHERE fnkUserId = ?";
@@ -74,12 +74,15 @@ if (isset($_GET["user"])) {
     $gender = $results[0]["fldGender"];
     $age = $results[0]["fldAge"];
     $AboutMe = $results[0]["fldAboutMe"];
-
-    if (!empty($results)) {
-        $insert = true;
-    }
-
+    /* Comment to remove insert set to true. Using REPLACE instead of INSERT vs UPDATE
+      if (!empty($results)) {
+      $insert = true;
+      }
+     */
     if ($debug) {
+
+        print "<p>Profile results:</p>";
+        print "<p>Insert = " . $insert;
         print_r($data);
         print $query;
         print_r($results);
@@ -91,6 +94,7 @@ if (isset($_GET["user"])) {
     $email = "samuel.colburn@uvm.edu";
     $Username = '';
     $password = '';
+    $PermissionLevel = '';
 
 // @@ PROFILE DATA @@
     $firstName = "";
@@ -112,6 +116,7 @@ if (isset($_GET["user"])) {
 $emailERROR = false;
 $UsernameERROR = false;
 $passwordERROR = false;
+$PermissionLevelERROR = false;
 
 //PROFILE ERROR FLAGS
 $firstNameERROR = false;
@@ -165,6 +170,13 @@ if (isset($_POST["btnSubmit"])) {
 
     $password = htmlentities($_POST["Password"], ENT_QUOTES, "UTF-8");
 
+    // Only pass through permission level if admin
+    if ($_SESSION["admin"]) {
+        $PermissionLevel = htmlentities($_POST["numPermissionLevel"], ENT_QUOTES, "UTF-8");
+    }
+    else{
+        $PermissionLevel = htmlentities($_POST["hidPermissionLevel"], ENT_QUOTES, "UTF-8");
+    }
 
     //--- PROFILE SANATIZE ---
 
@@ -275,7 +287,7 @@ if (isset($_POST["btnSubmit"])) {
     } elseif ($AboutMe == '') {
         $AboutMeERROR = false;
     } elseif (!verifyAlphaNum($AboutMe)) {
-        $errorMsg[] = "Your personal description appears to contain characters other than those accepted. Please make sure to only use basic text.";
+        $errorMsg[] = "Your personal description appears to contain malicious characters. Please make sure to only use basic text.";
         $AboutMeERROR = true;
     }
 
@@ -305,8 +317,11 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = "UPDATE tblUsers SET fldEmail = ? , fldUsername = ? , fldPassword = ? WHERE pmkUserID = ?";
-            $data = array($email, $Username, $password, $UserID);
+            $query = "UPDATE tblUsers SET ";
+           $query .= "fldEmail = ? , fldUsername = ? , fldPassword = ?  , fldPermissionLevel = ? ";
+        
+            $query .= "WHERE pmkUserID = ?";
+            $data = array($email, $Username, $password , $PermissionLevel , $UserID);
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -335,19 +350,19 @@ if (isset($_POST["btnSubmit"])) {
         //@@@@@@@@@@@ PROFILE DATA SQL @@@@@@@@@@@@@@@@
         try {
             $thisDatabase->db->beginTransaction();
-
-            if ($insert) {
-                $query = "INSERT INTO";
-            } else {
-                $query = "UPDATE";
-            }
+//comments remove if insert functionilty, replaced with REPLACE INTO sql statement.
+            //if ($insert) {
+            //    $query = "INSERT INTO";
+            //} else {
+            $query = "REPLACE INTO";
+            //}
             $query .= " tblProfile SET  fldFirstName = ? , fldLastName = ? , fldGender = ? , fldAge = ? ,fldAboutMe = ?";
-
-            if ($insert) {
-                $query .= " , fnkUserId = ? ";
-            } else {
-                $query .=' WHERE fnkUserId = ? ';
-            }
+// comments remove if insert functionilty, replaced with REPLACE INTO sql statement.
+            //if ($insert) {
+            //   $query .= " , fnkUserId = ? ";
+            //} else {
+            $query .=' , fnkUserId = ? ';
+            //}
 
             $data = array($firstName, $lastName, $gender, $age, $AboutMe, $UserID);
             if ($debug) {
@@ -529,7 +544,15 @@ if (isset($_POST["btnSubmit"])) {
                                    onfocus="this.select()"
                                    >
                         </label>
-
+                  <?php     
+if ($_SESSION["admin"]) {
+    print'<label for="numPermissionLevel">Permission Level';
+    print'<input type="number" id="numPermissionLevel" name="numPermissionLevel" min="0" max="4" value="'.$PermissionLevel.'"> ';
+    print'</label>';
+}else{
+ print '<input type="hidden" id="hidPermissionLevel" name="hidPermissionLevel" value="'.$PermissionLevel.'">';
+}
+?>
                     </fieldset>
                     <!-- ends User Form -->
                 </fieldset> 

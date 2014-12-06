@@ -469,7 +469,7 @@ if (isset($_POST["btnSubmit"])) {
                     <label for="txtfirstName" class="required">First Name
                         <input type="text" id="txtFirstName" name="txtfirstName"
                                value="<?php print $firstName; ?>"
-                               tabindex="200" maxlength="45" placeholder="Billy"
+                               tabindex="200" maxlength="45" placeholder="ex. Billy"
                                <?php if ($firstNameERROR) print 'class="mistake"'; ?>
 
                                >
@@ -478,7 +478,7 @@ if (isset($_POST["btnSubmit"])) {
                     <label for="txtlastName" class="required">Last Name
                         <input type="text" id="txtLastName" name="txtlastName"
                                value="<?php print $lastName; ?>"
-                               tabindex="210" maxlength="45" placeholder="Bob"
+                               tabindex="210" maxlength="45" placeholder="ex. Bob"
                                <?php if ($lastNameERROR) print 'class="mistake"'; ?>
 
                                >
