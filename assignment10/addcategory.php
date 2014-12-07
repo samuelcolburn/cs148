@@ -378,7 +378,7 @@ if (isset($_POST["btnSubmit"])) {
 
                         <label for="numPrice" class="required">Price
                             <input type="quantity" id="numPrice" name="numPrice"
-                                   value="<?php print $Price;?>"
+                                   value=""
                                    tabindex="110" maxlength="16" placeholder="Enter a price"
                                    min ="0" max ="99999"
                                    <?php if ($PriceERROR) print 'class="mistake"'; ?>
@@ -396,7 +396,11 @@ if (isset($_POST["btnSubmit"])) {
                                        print 'class="mistake"';                                  
                                 }
                                 ?>
-                                   ><?phpprint $Description;?></textarea>
+                                   >
+                            <?php
+                            print $Description;
+                            ?>
+                            </textarea>
                         </label>
                        <!-- START Listbox -->
                         <label id="lstCategory">Category</label>

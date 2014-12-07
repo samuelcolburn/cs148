@@ -1,10 +1,12 @@
 <?php
-/* the purpose of this page is to display a form to allow a person to register
- * the form will be sticky meaning if there is a mistake the data previously 
- * entered will be displayed again. Once a form is submitted (to this same page)
+/* the purpose of this page is to display a form to allow a person to update their profile
+ * The form will have their previous information input into the form for them. 
+ * IF the user didn't create a profile when they registered, this will automatically create one
+ * and input the new values.
+ * Once a form is submitted (to this same page)
  * we first sanitize our data by replacing html codes with the html character.
  * then we check to see if the data is valid. if data is valid enter the data 
- * into the table and we send and dispplay a confirmation email message. 
+ * into the table. 
  * 
  * if the data is incorrect we flag the errors.
  * 
@@ -21,7 +23,7 @@ include "top.php";
 //
 // SECTION: 1a.
 // variables for the classroom purposes to help find errors.
-$debug = true;
+$debug = false;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -173,8 +175,7 @@ if (isset($_POST["btnSubmit"])) {
     // Only pass through permission level if admin
     if ($_SESSION["admin"]) {
         $PermissionLevel = htmlentities($_POST["numPermissionLevel"], ENT_QUOTES, "UTF-8");
-    }
-    else{
+    } else {
         $PermissionLevel = htmlentities($_POST["hidPermissionLevel"], ENT_QUOTES, "UTF-8");
     }
 
@@ -318,10 +319,10 @@ if (isset($_POST["btnSubmit"])) {
         try {
             $thisDatabase->db->beginTransaction();
             $query = "UPDATE tblUsers SET ";
-           $query .= "fldEmail = ? , fldUsername = ? , fldPassword = ?  , fldPermissionLevel = ? ";
-        
+            $query .= "fldEmail = ? , fldUsername = ? , fldPassword = ?  , fldPermissionLevel = ? ";
+
             $query .= "WHERE pmkUserID = ?";
-            $data = array($email, $Username, $password , $PermissionLevel , $UserID);
+            $data = array($email, $Username, $password, $PermissionLevel, $UserID);
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -390,53 +391,11 @@ if (isset($_POST["btnSubmit"])) {
         }
         // If the transaction was successful, give success message
         if ($dataEntered) {
-            if ($debug)
-                print "<p>data entered now prepare keys ";
-            //#################################################################
-            // create a key value for confirmation
-
-            $query = "SELECT fldDateJoined FROM tblUsers WHERE pmkUserId=" . $primaryKey;
-            $results = $thisDatabase->select($query);
-
-
-            $dateSubmitted = $results[0]["fldDateJoined"];
-
-            $key1 = sha1($dateSubmitted);
-            $key2 = $primaryKey;
 
             if ($debug)
                 print "<p>key 1: " . $key1;
             if ($debug)
                 print "<p>key 2: " . $key2;
-
-
-            //#################################################################
-            //
-            //Put forms information into a variable to print on the screen
-            //
-
-            $message = '<h2>Thank you for updating your account.</h2>';
-
-            $message .= "<p>Your account" . $username . "has been updated";
-            $message .= "<p> New username: " . $Username . "</p>";
-            $message .= "<p> New password: " . $password . "</p>";
-            $message .= "<p> New email: " . $email . "</p>";
-            $message .= "<p> If you did not make these changes, please contact site admins immediately.</p>";
-            $message .= "<a href= https://smcolbur.w3.uvm.edu/cs148/assignment10/home.php>Assignment 10</a>";
-
-
-
-            //##############################################################
-            //
-            // email the form's information
-            //
-            $to = $email; // the person who filled out the form
-            $cc = "";
-            $bcc = "";
-            $from = "Assignment 10 <samuel.colburn@uvm.edu>";
-            $subject = "Your account at Assignment10 has been updated.";
-
-            // $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
         } //data entered  
     } // end form is valid
 } // ends if form was submitted.
@@ -446,7 +405,7 @@ if (isset($_POST["btnSubmit"])) {
 //
 ?>
 <article id="main">
-    <?php
+<?php
 //####################################
 //
 // SECTION 3a.
@@ -456,49 +415,39 @@ if (isset($_POST["btnSubmit"])) {
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h2>Your Request has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been processed</h2>";
-        print "<p>An email with your updated information has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been sent";
-        print " to " . $email . " detailing the updates. Please check your email to confirm these updates to your account.</p>";
-    } else {
+if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    print "<h2>Your Profile Has been updated!";
+} else {
 //####################################
 //
 // SECTION 3b Error Messages
 //
 // display any error messages before we print out the form
-        if ($errorMsg) {
-            print '<div id="errors">';
-            print "<ol>\n";
-            foreach ($errorMsg as $err) {
-                print "<li>" . $err . "</li>\n";
-            }
-            print "</ol>\n";
-            print '</div>';
+    if ($errorMsg) {
+        print '<div id="errors">';
+        print "<ol>\n";
+        foreach ($errorMsg as $err) {
+            print "<li>" . $err . "</li>\n";
         }
+        print "</ol>\n";
+        print '</div>';
+    }
 //####################################
 //
 // SECTION 3c html Form
 //
-        /* Display the HTML form. note that the action is to this same page. $phpSelf
-          is defined in top.php
-          NOTE the line:
-          value="<?php print $email; ?>
-          this makes the form sticky by displaying either the initial default value (line 35)
-          or the value they typed in (line 84)
-          NOTE this line:
-          <?php if($emailERROR) print 'class="mistake"'; ?>
-          this prints out a css class so that we can highlight the background etc. to
-          make it stand out that a mistake happened here.
-         */
-        ?>
+    /* Display the HTML form. note that the action is to this same page. $phpSelf
+      is defined in top.php
+      NOTE the line:
+      value="<?php print $email; ?>
+      this makes the form sticky by displaying either the initial default value (line 35)
+      or the value they typed in (line 84)
+      NOTE this line:
+      <?php if($emailERROR) print 'class="mistake"'; ?>
+      this prints out a css class so that we can highlight the background etc. to
+      make it stand out that a mistake happened here.
+     */
+    ?>
         <form action="<?php print $phpSelf; ?>"
               method="post"
               id="frmRegister">
@@ -521,7 +470,7 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="text" id="txtUsername" name="txtUsername"
                                    value="<?php print $Username; ?>"
                                    tabindex="100" maxlength="16" placeholder="Enter a username"
-                                   <?php if ($UsernameERROR) print 'class="mistake"'; ?>
+    <?php if ($UsernameERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
@@ -530,7 +479,7 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="password" id="Password" name="Password"
                                    value=""
                                    tabindex="110" maxlength="16" placeholder="Enter a password"
-                                   <?php if ($passwordERROR) print 'class="mistake"'; ?>
+    <?php if ($passwordERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
@@ -540,19 +489,19 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter a valid email address"
-                                   <?php if ($emailERROR) print 'class="mistake"'; ?>
+    <?php if ($emailERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
                         </label>
-                  <?php     
-if ($_SESSION["admin"]) {
-    print'<label for="numPermissionLevel">Permission Level';
-    print'<input type="number" id="numPermissionLevel" name="numPermissionLevel" min="0" max="4" value="'.$PermissionLevel.'"> ';
-    print'</label>';
-}else{
- print '<input type="hidden" id="hidPermissionLevel" name="hidPermissionLevel" value="'.$PermissionLevel.'">';
-}
-?>
+                                   <?php
+                                   if ($_SESSION["admin"]) {
+                                       print'<label for="numPermissionLevel">Permission Level';
+                                       print'<input type="number" id="numPermissionLevel" name="numPermissionLevel" min="0" max="4" value="' . $PermissionLevel . '"> ';
+                                       print'</label>';
+                                   } else {
+                                       print '<input type="hidden" id="hidPermissionLevel" name="hidPermissionLevel" value="' . $PermissionLevel . '">';
+                                   }
+                                   ?>
                     </fieldset>
                     <!-- ends User Form -->
                 </fieldset> 
@@ -567,7 +516,7 @@ if ($_SESSION["admin"]) {
                         <input type="text" id="txtFirstName" name="txtfirstName"
                                value="<?php print $firstName; ?>"
                                tabindex="200" maxlength="45" placeholder="Billy"
-                               <?php if ($firstNameERROR) print 'class="mistake"'; ?>
+    <?php if ($firstNameERROR) print 'class="mistake"'; ?>
 
                                >
                     </label>
@@ -576,7 +525,7 @@ if ($_SESSION["admin"]) {
                         <input type="text" id="txtLastName" name="txtlastName"
                                value="<?php print $lastName; ?>"
                                tabindex="210" maxlength="45" placeholder="Bob"
-                               <?php if ($lastNameERROR) print 'class="mistake"'; ?>
+    <?php if ($lastNameERROR) print 'class="mistake"'; ?>
 
                                >
                     </label>
@@ -585,13 +534,13 @@ if ($_SESSION["admin"]) {
                               >   <!-- START gender radio -->
                         <legend>Gender</legend>
                         <label  <?php
-                        if ($genderERROR)
-                            print 'class="mistake"';
-                        ?>><input type="radio" 
+    if ($genderERROR)
+        print 'class="mistake"';
+    ?>><input type="radio" 
                                 id="radGenderMale" 
                                 name="radGender" 
                                 value="Male"
-                                <?php if ($gender == "Male") print 'checked="checked"'; ?>
+                            <?php if ($gender == "Male") print 'checked="checked"'; ?>
                                 tabindex="210">Male</label>
                         <label <?php
                         if ($genderERROR)
@@ -600,16 +549,16 @@ if ($_SESSION["admin"]) {
                                 id="radGenderFemale" 
                                 name="radGender" 
                                 value="Female"
-                                <?php if ($gender == "Female") print 'checked="checked"' ?>
+                            <?php if ($gender == "Female") print 'checked="checked"' ?>
                                 tabindex="220">Female</label>
                         <label <?php
-                        if ($genderERROR)
-                            print 'class="mistake"';
-                        ?>><input type="radio" 
+                    if ($genderERROR)
+                        print 'class="mistake"';
+                    ?>><input type="radio" 
                                 id="radGenderOther" 
                                 name="radGender" 
                                 value="Other"
-                                <?php if ($gender == "Other") print 'checked="checked"'; ?>
+                            <?php if ($gender == "Other") print 'checked="checked"'; ?>
                                 tabindex="230">Other</label>
                     </fieldset> <!-- end gender radio -->
                     <label id="lstAge">Age</label>               
@@ -634,11 +583,13 @@ if ($_SESSION["admin"]) {
                     </select>
                     <label id ="AboutMe" for = AboutMe>About Me</label>
                     <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php
-                    print "'$ABOUTME_MAX_LENGTH'";
-                    if ($AboutMeERROR) {
-                        print 'class = "mistake"';
-                    }
-                    ?>></textarea>
+                        print "'$ABOUTME_MAX_LENGTH'";
+                        if ($AboutMeERROR) {
+                            print 'class = "mistake"';
+                        }
+                            ?>><?php
+                    print$AboutMe;
+                    ?></textarea>
                 </fieldset> <!-- End Profile -->
                 <fieldset class="buttons">
                     <legend></legend>
@@ -646,9 +597,9 @@ if ($_SESSION["admin"]) {
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>
-        <?php
-    } // end body submit
-    ?>
+    <?php
+} // end body submit
+?>
 </article>
 
 
