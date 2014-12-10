@@ -13,7 +13,7 @@ if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
 if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
 
-$message = '<h2> ACCESS DENIED</p>';
+$message = '<h2> ACCESS DENIED</h2>';
 
 print '<article>';
 

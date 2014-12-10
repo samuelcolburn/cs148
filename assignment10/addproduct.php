@@ -367,7 +367,7 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="hidden" id="hidProductID" name="hidProductID"
                                value="<?php print $ProductID; ?>"
                                >
-                        <label for="txtProductName" class="required">Product Name
+                        <label  class="required">Product Name
                             <input type="text" id="txtProductName" name="txtProductName"
                                    value="<?php print $ProductName; ?>"
                                    tabindex="100" maxlength="16" placeholder="Enter a product name"
@@ -376,18 +376,18 @@ if (isset($_POST["btnSubmit"])) {
 
                         </label>
 
-                        <label for="numPrice" class="required">Price
+                        <label  class="required">Price
                             <input type="quantity" id="numPrice" name="numPrice"
                                    value="<?php print $Price;?>"
                                    tabindex="110" maxlength="16" placeholder="Enter a price"
-                                   min ="0" max ="99999"
+                                   min ="0" max ="99999" step="any"
                                    <?php if ($PriceERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
 
 
-                        <label for="txtDescription" class="required">Description
+                        <label  class="required">Description
                             <textarea id="txtDescription" name="txtDescription"
                                    tabindex="120" maxlength="500" rows="10"
                                    
@@ -396,7 +396,7 @@ if (isset($_POST["btnSubmit"])) {
                                        print 'class="mistake"';                                  
                                 }
                                 ?>
-                                   ><?phpprint $Description;?></textarea>
+                                   ><?php print $Description; ?></textarea>
                         </label>
                        <!-- START Listbox -->
                         <label id="lstCategory">Category</label>

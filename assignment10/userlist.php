@@ -77,7 +77,7 @@ foreach ($results as $row) {
             print "<td>" . $value . "</td>\n";
         }
     }
-    print "</a></tr>\n";
+    print "</tr>\n";
 }
 print "</table>\n";
 }

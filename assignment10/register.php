@@ -428,16 +428,15 @@ if (isset($_POST["btnSubmit"])) {
                     <legend>Required Information</legend>
                     <fieldset class="contact">
                         <legend></legend>
-                        <label for="txtUsername" class="required">Username
+                        <label class="required">Username
                             <input type="text" id="txtUsername" name="txtUsername"
                                    value="<?php print $Username; ?>"
                                    tabindex="100" maxlength="16" placeholder="Enter a username"
-                                   <?php if ($UsernameERROR) print 'class="mistake"'; ?>
-                                   >
+                                   <?php if ($UsernameERROR) print 'class="mistake"'; ?>>
 
                         </label>
 
-                        <label for="Password" class="required">Password
+                        <label  class="required">Password
                             <input type="password" id="Password" name="Password"
                                    value=""
                                    tabindex="110" maxlength="16" placeholder="Enter a password"
@@ -447,7 +446,7 @@ if (isset($_POST["btnSubmit"])) {
                         </label>
 
 
-                        <label for="txtEmail" class="required">Email
+                        <label  class="required">Email
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter a valid email address"
@@ -466,7 +465,7 @@ if (isset($_POST["btnSubmit"])) {
                 <fieldset class ="Profile">
                     <legend>Optional Profile</legend>
 
-                    <label for="txtfirstName" class="required">First Name
+                    <label class="required">First Name
                         <input type="text" id="txtFirstName" name="txtfirstName"
                                value="<?php print $firstName; ?>"
                                tabindex="200" maxlength="45" placeholder="ex. Billy"
@@ -475,7 +474,7 @@ if (isset($_POST["btnSubmit"])) {
                                >
                     </label>
 
-                    <label for="txtlastName" class="required">Last Name
+                    <label class="required">Last Name
                         <input type="text" id="txtLastName" name="txtlastName"
                                value="<?php print $lastName; ?>"
                                tabindex="210" maxlength="45" placeholder="ex. Bob"
@@ -535,7 +534,7 @@ if (isset($_POST["btnSubmit"])) {
                             value="Over51" >Over 51</option>
 
                     </select>
-                    <label id ="AboutMe" for = AboutMe>About Me</label>
+                    <label id ="AboutMe">About Me</label>
                     <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php print "'$ABOUTME_MAX_LENGTH'";
                     if ($AboutMeERROR){ print 'class = "mistake"';}
                     ?>></textarea>

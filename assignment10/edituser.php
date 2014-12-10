@@ -581,7 +581,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             value="Over51" >Over 51</option>
 
                     </select>
-                    <label id ="AboutMe" for = AboutMe>About Me</label>
+                    <label id ="AboutMe" >About Me</label>
                     <textarea id=tAboutMe name=AboutMe rows=5 maxlength= <?php
                         print "'$ABOUTME_MAX_LENGTH'";
                         if ($AboutMeERROR) {
