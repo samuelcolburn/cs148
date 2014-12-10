@@ -18,7 +18,7 @@ print "<h2>Product Categories</h2>\n";
 // if the admin is viewing the product list, have 'add a product' link at the top of the page
 if ($_SESSION["admin"]) {
     print "<p><a href = 'addcategory.php'>Add a Product Category</a></p>";
-}
+
 
 $yourURL = $domain . $phpSelf;
 
@@ -87,7 +87,10 @@ foreach ($results as $row) {
     print "</tr>\n";
 }
 print "</table>\n";
-
+}
+else{
+    print "<h2>ACCESS DENIED</h2>";
+}
 include "footer.php";
 if ($debug)
     print "<p>END OF PROCESSING</p>";

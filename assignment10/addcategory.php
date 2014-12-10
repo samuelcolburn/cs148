@@ -44,6 +44,7 @@ $yourURL = $domain . $phpSelf;
 // Initialize variables one for each form element
 // in the order they appear on the form
 //If the id is set, it will be a product edit. Get previous values for the product, and store them in the form for editing.
+if ($_SESSION["admin"]) {
 if (isset($_GET["id"])) {
 
     //sanitize id
@@ -331,6 +332,10 @@ if (isset($_POST["btnSubmit"])) {
         </form>
         <?php
     } // end body submit
+}
+else{
+    print"<h2>ACCESS DENIED</h2>";
+}
     ?>
 </article>
 
