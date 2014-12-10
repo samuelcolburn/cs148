@@ -453,7 +453,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
               id="frmRegister">
             <fieldset class="wrapper">
 
-                <legend>Register Today</legend>
+                <legend>Edit User: <?php print $username; ?></legend>
                 <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
                     <legend>Required Information</legend>

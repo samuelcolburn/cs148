@@ -3,7 +3,7 @@
 include "top.php";
 
 
-$debug = true;
+$debug = false;
 
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
@@ -25,7 +25,7 @@ $yourURL = $domain . $phpSelf;
 
 
 //Get all product data to be displayed
-$query = "SELECT fldProductName as 'Name' , fldPrice as 'Price' , fldDescription as 'Description' FROM tblProducts";
+$query = "SELECT pmkProductID as 'ID' , fldProductName as 'Name' , fldPrice as 'Price' , fldDescription as 'Description' , fldCategoryName as 'Category' FROM tblProducts,tblCategories WHERE fnkCategoryID = pmkCategoryID ";
 $data = array();
 $results = $thisDatabase->select($query, $data);
 
@@ -41,7 +41,7 @@ $keys = array_keys($row);
 
 
     $numberRecords = count($results);
-
+  
     print "<h3>Total Products: " . $numberRecords . "</h3>";
     
 // PRINT TABLE

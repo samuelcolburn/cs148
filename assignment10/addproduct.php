@@ -53,18 +53,23 @@ if (isset($_GET["id"])) {
     $data = array($pmkProductID);
 
     // select the product from the product table
-    $query = "SELECT pmkProductID , fldProductName , fldDescription , fldDateSubmitted , fldCommentCount , fldPrice , fldImage, fnkCategoryID FROM tblProducts WHERE pmkProductID = ?";
+    $query = "SELECT pmkProductID , fldProductName , fldDescription , fldPrice , fldImage, fnkCategoryID FROM tblProducts WHERE pmkProductID = ?";
 
     //@@@ STORE  results
     $results = $thisDatabase->select($query, $data);
     $ProductName = $results[0]["fldProductName"];
     $Description = $results[0]["fldDescription"];
-    $DateSubmitted = $results[0]["fldDateSubmitted"];
-    $CommentCount = $results[0]["fldCommentCount"];
     $Price = $results[0]["fldPrice"];
     $Image = $results[0]["fldImage"];
     $CategoryID = $results[0]["fnkCategoryID"];
+    
+   if ($debug) {
 
+        print "<p>Product:</p>";
+        print_r($data);
+        print $query;
+        print_r($results);
+    }
     //Using the category ID, get the category for the product
     $query = "SELECT fldCategoryName FROM tblCategories WHERE pmkCategoryID = ?";
     $data = array($CategoryID);
@@ -77,7 +82,7 @@ if (isset($_GET["id"])) {
 
     if ($debug) {
 
-        print "<p>Product:</p>";
+        print "<p>Category:</p>";
         print_r($data);
         print $query;
         print_r($results);
@@ -167,6 +172,8 @@ if (isset($_POST["btnSubmit"])) {
     $Category = htmlentities($_POST["lstCategory"], ENT_QUOTES, "UTF-8");
 
     if ($debug) {
+        print "<p>update = ".$update."</p>";
+        print"<p>pmk = ".$pmkProductID."</p>";
         print"<p>sanitize pass</p>";
     }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -365,7 +372,7 @@ if (isset($_POST["btnSubmit"])) {
                     <fieldset class="contact">
                         <legend></legend>
                             <input type="hidden" id="hidProductID" name="hidProductID"
-                               value="<?php print $ProductID; ?>"
+                               value="<?php print $pmkProductID; ?>"
                                >
                         <label  class="required">Product Name
                             <input type="text" id="txtProductName" name="txtProductName"
