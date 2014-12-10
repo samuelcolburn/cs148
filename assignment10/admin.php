@@ -18,14 +18,12 @@ $message = '<h2> ACCESS DENIED</h2>';
 print '<article>';
 
 if ($_SESSION["admin"]) {
-    
-       $message = "<p><a href = 'userlist.php'>User List</a></p>";
-       $message .= " <p><a href = 'products.php'>Product List</a></p>";
-       $message .="<p><a href = 'addproduct.php'>Add a Product</a></p>";
-       $message .="<p><a href = 'addcategory.php'>Add a Product Category</a></p>";
 
-
-    
+    $message = "<p><a href = 'userlist.php'>User List</a></p>";
+    $message .= " <p><a href = 'products.php'>Product List</a></p>";
+ //   $message .="<p><a href = 'addproduct.php'>Add a Product</a></p>";
+ //   $message .="<p><a href = 'addcategory.php'>Add a Product Category</a></p>";
+    $message .="<p><a href = 'categorylist.php'>Product Categories</a></p>";
 }//ending if admin else clause
 //
 //~~~~~~ print relevant message

@@ -93,7 +93,10 @@ if (isset($_GET["user"])) {
         print_r($data);
         print_r($results);
     }
-
+if(empty($results)){
+    print "<p>You haven't created a profile yet! Click the edit button below to create one.</p>";
+}
+else{
      print "<table class = personalinfo>";
 
     foreach ($results as $row) {
@@ -109,6 +112,7 @@ if (isset($_GET["user"])) {
             }
         }
     }
+}
      print"</table>";
     // print edit and delte buttons only if user or admin 
     if ($_SESSION["user"] == $username Or $_SESSION["admin"]) {
@@ -116,8 +120,8 @@ if (isset($_GET["user"])) {
 
         print"<p><a href = deleteuser.php?user=" . $username . ">DELETE</a></p>";
     }
-}
 
+}
 //@@ FOOTER @@
 include "footer.php";
 

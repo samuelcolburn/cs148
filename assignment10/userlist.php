@@ -60,6 +60,7 @@ foreach ($results as $row) {
             }
         }
         print "</tr>";
+        print "</thead>";
         $firstTime = false;
     
     }

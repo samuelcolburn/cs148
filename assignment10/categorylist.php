@@ -1,9 +1,8 @@
 <?php
-
 include "top.php";
 
 
-$debug = true;
+$debug = false;
 
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
@@ -12,42 +11,43 @@ if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
 if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
 
-print "<article id=main>";
+print "<article id=main>\n";
 
-print "<h2>Products</h2>";
+print "<h2>Product Categories</h2>\n";
 
 // if the admin is viewing the product list, have 'add a product' link at the top of the page
 if ($_SESSION["admin"]) {
-    print "<p><a href = 'addproduct.php'>Add a Product</a></p>";
+    print "<p><a href = 'addcategory.php'>Add a Product Category</a></p>";
 }
 
 $yourURL = $domain . $phpSelf;
 
 
 //Get all product data to be displayed
-$query = "SELECT fldProductName as 'Name' , fldPrice as 'Price' , fldDescription as 'Description' FROM tblProducts";
+$query = "SELECT fldCategoryName as 'Name' , pmkCategoryID as 'Category ID' FROM tblCategories ORDER BY fldCategoryName ";
 $data = array();
 $results = $thisDatabase->select($query, $data);
 
 
- 
- 
+
+
 if ($debug)
     print $query;
-    print $username;
-    
+print $username;
+
 // gets the field names from the associative array
 $keys = array_keys($row);
 
 
-    $numberRecords = count($results);
+$numberRecords = count($results);
 
-    print "<h3>Total Products: " . $numberRecords . "</h3>";
-    
+print "<h3>Total Categories: " . $numberRecords . "</h3> \n";
+
 // PRINT TABLE
-print "<table>";
+print "<table>\n";
 
 $firstTime = true;
+
 
 /* since it is associative array display the field names */
 foreach ($results as $row) {
@@ -60,32 +60,30 @@ foreach ($results as $row) {
                 print "<th>" . $key . "</th>";
             }
         }
-        print "</tr>";
-        print "</thead>";
+ print "<th>Edit</th>";
+    print "<th>Delete</th>";
+ 
+      print "</tr>\n";
+         print "</thead>\n";
         $firstTime = false;
-    
     }
-
+   
+  
+    
     /* display the data, the array is both associative and index so we are
      *  skipping the index otherwise records are doubled up */
-    $ProductID = $row[0];
-        
-    print ' <tr class = "tablerow" onclick="location.href= ';
-    print " 'product.php?id=".$ProductID."' ";
-    print ' " >';
-    
+
+    print " <tr>\n";
+
     foreach ($row as $field => $value) {
         if (!is_int($field)) {
-            if($field == "fldPrice"){
-                if($debug){
-                    print $field;
-                }
-                print "<td>$" . $value . "</td>\n";
-            }else{
+
             print "<td>" . $value . "</td>\n";
-            }
         }
     }
+
+    print '<td><a href="addcategory.php?id=' . $row[1] . '">[Edit]</a></td> ';
+    print '<td><a href="delete.php?id=' . $row[1] . '">[Delete]</a></td> ';
     print "</tr>\n";
 }
 print "</table>\n";

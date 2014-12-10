@@ -47,51 +47,32 @@ $yourURL = $domain . $phpSelf;
 if (isset($_GET["id"])) {
 
     //sanitize id
-    $pmkProductID = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+    $CategoryID = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
     // Store the id in the data array for the select
-    $data = array($pmkProductID);
+    $data = array($CategoryID);
 
     // select the product from the product table
-    $query = "SELECT pmkProductID , fldProductName , fldDescription , fldDateSubmitted , fldCommentCount , fldPrice , fldImage, fnkCategoryID FROM tblProducts WHERE pmkProductID = ?";
+    $query = "SELECT pmkCategoryID , fldCategoryName FROM tblCategories WHERE pmkCategoryID = ? ";
 
     //@@@ STORE  results
     $results = $thisDatabase->select($query, $data);
-    $ProductName = $results[0]["fldProductName"];
-    $Description = $results[0]["fldDescription"];
-    $DateSubmitted = $results[0]["fldDateSubmitted"];
-    $CommentCount = $results[0]["fldCommentCount"];
-    $Price = $results[0]["fldPrice"];
-    $Image = $results[0]["fldImage"];
-    $CategoryID = $results[0]["fnkCategoryID"];
+    $CategoryName = $results[0]["fldCategoryName"];
+    $CategoryID = $results[0]["pmkCategoryID"];
 
-    //Using the category ID, get the category for the product
-    $query = "SELECT fldCategoryName FROM tblCategories WHERE pmkCategoryID = ?";
-    $data = array($CategoryID);
-
-    //get the category name
-    $results = $thisDatabase->select($query, $data);
-
-    //store the category in  $Category
-    $Category = $results[0]["fldCategoryName"];
 
     if ($debug) {
 
-        print "<p>Product:</p>";
+        print "<p>Category:</p>";
         print_r($data);
         print $query;
         print_r($results);
     }
 } else {
     // Product variables
-    $pmkProductID = -1;
-    $ProductName = "";
-    $Description = '';
-    $Price = "";
-    $Image = "";
+    $CategoryID = -1;
+    $CategoryName = "";
 
-// Category Variable
-    $Category = "Any";
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -101,13 +82,8 @@ if (isset($_GET["id"])) {
 // Initialize Error Flags one for each form element we validate
 // in the order they appear in section 1c.
 //Product Flags
-$ProductNameERROR = false;
-$DescrptionERROR = false;
-$PriceERROR = false;
-$ImageERROR = false;
+$CategoryNameERROR = false;
 
-//Category Flag
-$CategoryERROR = false;
 
 //ERROR CONSTANTS
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -148,23 +124,16 @@ if (isset($_POST["btnSubmit"])) {
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
     // - --- PRODUCT SANITIZE
-    $pmkProductID = htmlentities($_POST["hidProductID"], ENT_QUOTES, "UTF-8");
+    $CategoryID = htmlentities($_POST["hidCategoryID"], ENT_QUOTES, "UTF-8");
 
-    if ($pmkProductID > 0) {
+    if ($CategoryID > 0) {
         $update = true;
     }
 
-    $ProductName = htmlentities($_POST["txtProductName"], ENT_QUOTES, "UTF-8");
-
-    $Description = htmlentities($_POST["txtDescription"], ENT_QUOTES, "UTF-8");
-
-    $Price = htmlentities($_POST["numPrice"], ENT_QUOTES, "UTF-8");
+    $CategoryName = htmlentities($_POST["txtCategoryName"], ENT_QUOTES, "UTF-8");
 
 
 
-
-    //--- CATEGORY SANITIZE ---
-    $Category = htmlentities($_POST["lstCategory"], ENT_QUOTES, "UTF-8");
 
     if ($debug) {
         print"<p>sanitize pass</p>";
@@ -180,44 +149,14 @@ if (isset($_POST["btnSubmit"])) {
 // will be in the order they appear. errorMsg will be displayed on the form
 // see section 3b. The error flag ($emailERROR) will be used in section 3c.
     //~~~~~~~~~~~PRODUCT NAME VALIDATION~~~~~~~~~~
-    if ($ProductName == "") {
-        $errorMsg[] = "Please enter a name for the Product";
+    if ($CategoryName == "") {
+        $errorMsg[] = "Please enter a name for the category";
         $ProductNameERROR = true;
-    } elseif (!verifyAlphaNum($ProductName)) {
-        $errorMsg[] = "Your product name invalid. Be sure to only use basic characters.";
+    } elseif (!verifyAlphaNum($CategoryName)) {
+        $errorMsg[] = "Your category name invalid. Be sure to only use basic characters.";
         $ProductNameERROR = true;
     }
 
-
-    //~~~~~~~~~~~~~DESCRIPTION VALIDATION~~~~~~~~~~~
-    if ($Description == "") {
-        $errorMsg[] = "Please enter a description for the product";
-        $DescriptionERROR = true;
-    } elseif (!verifyAlphaNum($Description)) {
-        $errorMsg[] = "Your description is invalid. Be sure to only use basic characters.";
-        $DescriptionERROR = true;
-    }
-
-    //~~~~~~PRICE VALIDATION~~~~~~~~~~~
-    if ($Price == "") {
-        $errorMsg[] = "Please enter a price";
-        $PriceERROR = true;
-    } elseif (!verifyNumeric($Price)) {
-        $errorMsg[] = "Please enter a valid price eg. 42.50";
-        $PriceERROR = true;
-    }
-
-    //~~~~~~~~ IMAGE VALIDATION ~~~~~~~~~~~~~~
-    //
-    //
-    //++++++ CATEGORY VALIDATION ++++++++++
-    if ($Category == "") {
-        $errorMsg[] = "Please enter a Category";
-        $CategoryError = true;
-    } elseif (!verifyAlphaNum($Category)) {
-        $errorMsg[] = "Please enter a valid category";
-        $CategoryERROR = true;
-    }
 
     if ($debug) {
         print"<p>validation pass</p>";
@@ -232,19 +171,12 @@ if (isset($_POST["btnSubmit"])) {
         if ($debug)
             print "<p>Form is valid</p>";
 
-        //@@@@@@ 
-        //SQL To get category ID to insert into product target
-        $data = array($Category);
-        
-        $query = "SELECT  pmkCategoryID from tblCategories WHERE fldCategoryName = ? ";
-        
-        $results = $thisDatabase->select($query, $data); 
-        $CategoryID = $results[0]['pmkCategoryID'];
+
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
-        // Product DATA SQL
+        // Category DATA SQL
         //
-        $data = array($ProductName, $Description, $Price , $CategoryID );
+        $data = array($CategoryName);
 
         $primaryKey = "";
         $dataEntered = false;
@@ -252,15 +184,15 @@ if (isset($_POST["btnSubmit"])) {
             $thisDatabase->db->beginTransaction();
 
             if ($update) {
-                $query = "UPDATE tblProducts SET ";
+                $query = "UPDATE tblCategories SET ";
             } else {
-                $query = "INSERT INTO tblProducts SET ";
+                $query = "INSERT INTO tblCategories SET ";
             }
-            $query .= " fldProductName = ? , fldDescription = ? , fldPrice = ? , fnkCategoryID = ? ";
+            $query .= " fldCategoryName = ? ";
 
             if ($update) {
-                $query = " WHERE pmkProductID = ? ";
-                $data[] = $pmkProductID;
+                $query .= " WHERE pmkCategoryID = ? ";
+                $data[] = $CategoryID;
                 $results = $thisDatabase->update($query, $data);
             } else {
                 $results = $thisDatabase->insert($query, $data);
@@ -315,13 +247,14 @@ if (isset($_POST["btnSubmit"])) {
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h2>Product ";
+        print "<h2>Category ";
         if($update){
             print" updated</h2>";
         }
         else{
            print" added</h2>";
                 }
+        print"<p><a href='categorylist.php'>Category List</a></p>";      
     } else {
 //####################################
 //
@@ -358,73 +291,24 @@ if (isset($_POST["btnSubmit"])) {
               id="frmRegister">
             <fieldset class="wrapper">
 
-                <legend><?php$ProductName?></legend>
+                <legend></legend>
                 <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
                     <legend>Required Information</legend>
                     <fieldset class="contact">
                         <legend></legend>
-                            <input type="hidden" id="hidProductID" name="hidProductID"
-                               value="<?php print $ProductID; ?>"
+                            <input type="hidden" id="hidCategoryID" name="hidCategoryID"
+                               value="<?php print $CategoryID; ?>"
                                >
-                        <label for="txtProductName" class="required">Product Name
-                            <input type="text" id="txtProductName" name="txtProductName"
-                                   value="<?php print $ProductName; ?>"
-                                   tabindex="100" maxlength="16" placeholder="Enter a product name"
-                                   <?php if ($ProductNameERROR) print 'class="mistake"'; ?>
+                        <label class="required">Category Name
+                            <input type="text" id="txtCategoryName" name="txtCategoryName"
+                                   value="<?php print $CategoryName; ?>"
+                                   tabindex="100" maxlength="16" placeholder="Enter a category name"
+                                   <?php if ($CategoryNameERROR) print 'class="mistake"'; ?>
                                    >
 
                         </label>
 
-                        <label for="numPrice" class="required">Price
-                            <input type="quantity" id="numPrice" name="numPrice"
-                                   value=""
-                                   tabindex="110" maxlength="16" placeholder="Enter a price"
-                                   min ="0" max ="99999"
-                                   <?php if ($PriceERROR) print 'class="mistake"'; ?>
-                                   >
-
-                        </label>
-
-
-                        <label for="txtDescription" class="required">Description
-                            <textarea id="txtDescription" name="txtDescription"
-                                   tabindex="120" maxlength="500" rows="10"
-                                   
-                                   <?php 
-                                   if ($DescriptionERROR) {
-                                       print 'class="mistake"';                                  
-                                }
-                                ?>
-                                   >
-                            <?php
-                            print $Description;
-                            ?>
-                            </textarea>
-                        </label>
-                       <!-- START Listbox -->
-                        <label id="lstCategory">Category</label>
-                        <?php
-                        $query = "SELECT DISTINCT fldCategoryName FROM tblCategories ORDER BY fldCategoryName ";
-                        $data = array();
-                        $results = $thisDatabase->select($query, $data);
-                        echo "<select name='lstCategory'> \n";
-                        foreach ($results as $row) {
-                            $row = array_shift($row);
-                            if (!empty($row)) {
-                                print "<option value='";
-                                echo $row;
-                                print "'>";
-                                echo $row;
-                                print "</option> \n";
-                            } else {
-                                print "<option value=''>Any</option> \n";
-                            }
-                        }
-                        echo "</select>";
-                        ?>
-
-                        <!-- End ListBox -->
                     </fieldset>
                     <!-- ends User Form -->
                 </fieldset> 

@@ -259,7 +259,7 @@ if (isset($_POST["btnSubmit"])) {
             $query .= " fldProductName = ? , fldDescription = ? , fldPrice = ? , fnkCategoryID = ? ";
 
             if ($update) {
-                $query = " WHERE pmkProductID = ? ";
+                $query .= " WHERE pmkProductID = ? ";
                 $data[] = $pmkProductID;
                 $results = $thisDatabase->update($query, $data);
             } else {
@@ -358,7 +358,7 @@ if (isset($_POST["btnSubmit"])) {
               id="frmRegister">
             <fieldset class="wrapper">
 
-                <legend><?php$ProductName?></legend>
+                <legend><?php print $ProductName; ?></legend>
                 <!-- Start User Form -->
                 <fieldset class="wrapperTwo">
                     <legend>Required Information</legend>
