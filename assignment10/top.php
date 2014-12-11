@@ -69,6 +69,8 @@
 
 
         $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+        
+     
 
         // CHECK USER SESSION
         if ($debug) {
@@ -81,10 +83,10 @@
 
             $query = "SELECT fldUsername , pmkUserId FROM tblUsers  WHERE fldUsername = ? ";
 
-            $results = $thisDatabase->select($query , $data);
+            $session_results = $thisDatabase->select($query , $data);
 
-            $session_username = $results[0]['fldUsername'];
-            $session_pmkUserID = $results[0]['fldUserId'];
+            $session_username = $session_results[0]['fldUsername'];
+            $session_pmkUserID = $session_results[0]['pmkUserId'];
 
             if ($debug) {
                 print"<p>Data </p>";

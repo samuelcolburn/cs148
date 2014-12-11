@@ -59,7 +59,7 @@ PRIMARY KEY (`pmkUserId`)
   `fldRating` tinyint(5) DEFAULT NULL,
   `fldDateSubmitted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (`fnkProductID` , `fnkUserID`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 */
