@@ -83,7 +83,7 @@ foreach ($results as $row) {
     }
 
     print '<td><a href="addcategory.php?id=' . $row[1] . '">[Edit]</a></td> ';
-    print '<td><a href="delete.php?id=' . $row[1] . '">[Delete]</a></td> ';
+    print '<td><a href="delete.php?id=' . $row[1] .'&amp;table=tblCategories">[Delete]</a></td> ';
     print "</tr>\n";
 }
 print "</table>\n";

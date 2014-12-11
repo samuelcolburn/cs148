@@ -118,7 +118,7 @@ else{
     if ($_SESSION["user"] == $username Or $_SESSION["admin"]) {
         print"<p><a href = edituser.php?user=" . $username . ">Edit</a></p>";
 
-        print"<p><a href = deleteuser.php?user=" . $username . ">DELETE</a></p>";
+        print"<p><a href = 'delete.php?id=" . $UserID . "&amp;table=tblUsers' >DELETE</a></p>";
     }
 
 }

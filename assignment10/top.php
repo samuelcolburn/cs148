@@ -78,8 +78,10 @@
         }
 
         if (!empty($_SESSION["user"])) {
+            
+            $user = htmlentities($_SESSION["user"], ENT_QUOTES, "UTF-8");
 
-            $data = array($_SESSION["user"]);
+            $data = array($user);
 
             $query = "SELECT fldUsername , pmkUserId FROM tblUsers  WHERE fldUsername = ? ";
 

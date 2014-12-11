@@ -29,7 +29,6 @@ h2 {
     color: #FFF;
     font-weight: bold;
     font-size: 2em;
-    text-align: center;
 }
 
 h3 {
@@ -356,7 +355,9 @@ input {
 
 }
 
-
+div#form{
+    float:left;
+}
 /* MAIL MESSAGE RESPONSE FORMATTING */
 div.message{
     border:thin solid #a8a8a8;

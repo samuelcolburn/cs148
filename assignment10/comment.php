@@ -188,7 +188,7 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION 3 Display Form
 //
 ?>
-<article id="main">
+<div id='form'>
     <?php
 //####################################
 //
@@ -201,8 +201,23 @@ if (isset($_POST["btnSubmit"])) {
 // to display the form.
     if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
         print "<h2>Comment ";
+?>
+    
+     <!--- Javascript to redirect to the homepage after logins -->
+   <script type="text/javascript">
+<!--
+function delayer(){
+    window.location = "product.php?id=<?php print $ProductID; ?>"
+}
+//-->
+</script>
+<!--TIMER -->
+<body onLoad="setTimeout('delayer()', 0000)"> 
+<h2>You're comment as been submitted!.</h2>
+<p>You should be redirected to the product page.</p>
 
-
+    
+<?php
         print" Submitted!</h2>";
     } else {
 //####################################
@@ -291,6 +306,7 @@ if (isset($_POST["btnSubmit"])) {
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>
+</div>
      <?php 
     } // end body submit
  }else{

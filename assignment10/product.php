@@ -55,7 +55,7 @@ if (isset($_GET["id"])) {
     if ($_SESSION["admin"]) {
         print"<p><a href = addproduct.php?id=" . $pmkProductID . ">Edit</a></p>";
 
-        print"<p><a href = deleteuser.php?user=" . $pmkProductID . ">DELETE</a></p>";
+        print"<p><a href = 'delete.php?id=" . $pmkProductID ."&amp;table=tblProducts'>DELETE</a></p>";
     }
 
 
@@ -156,9 +156,7 @@ if (isset($_GET["id"])) {
         include "comment.php";
     }
     else{
-        print"<p>Login or Register to Comment!</p>";
-        print"<p><a href='register.php'>Register</a></p>";
-        print"<p><a href='login.php'>Login</a></p>";
+        print"<p><a href='login.php'>Login</a> or <a href='register.php'>Register</a> to Comment!</p>";
     }
     
 } else {
